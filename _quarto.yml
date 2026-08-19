@@ -5,7 +5,7 @@ project:
 
 website:
   title: "Steffen Erickson"
-  # site-url: https://steffenerickson.github.io/REPO   # set once the GitHub repo exists
+  site-url: https://steffenerickson.github.io
   navbar:
     left:
       - href: index.qmd
