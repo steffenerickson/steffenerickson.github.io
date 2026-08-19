@@ -42,8 +42,8 @@ BS in Agricultural Economics, Fall 2015 – Spring 2019
 
 ## Work In Progress
 
-- Erickson, S. (in preparation). The effects of combining personalized learning technology and virtual tutoring on student achievement outcomes. Target journal: *Educational Evaluation and Policy Analysis*.
-- Erickson, S. (in preparation). The dependability of large language model (LLM) classroom observation systems for making inferences about teachers' instructional practices. Target journal: *Journal of Educational and Behavioral Statistics*.
+- Erickson, S., Wong, V. C., & Dray, A. (in preparation). Generalizing beyond the cutoff: A within-study comparison of regression discontinuity and difference-in-differences estimates of a hybrid tutoring program. Target journal: *Educational Evaluation and Policy Analysis*.
+- Erickson, S. (in preparation). Reliable measurement of teachers' instructional practices with LLM classifiers: Coefficients and selection criteria for low-inference count-based systems. Target journal: *Journal of Educational and Behavioral Statistics*.
 - Erickson, S. (in preparation). Hierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education. Target journal: *American Educational Research Journal*.
 - Erickson, S. (in preparation). mvgstudy: Stata commands for analyzing multivariate generalizability and decision studies. Target journal: *Stata Journal*.
 - Therrien, B., Doabler, C., & Erickson, S. (in preparation). Practice opportunities and the pursuit of scientific literacy for students with learning disabilities.
