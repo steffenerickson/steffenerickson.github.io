@@ -1,0 +1,20 @@
+v 3
+d mvgstudy. Multivariate generalizability and decision studies
+d
+d mvgstudy performs multivariate generalizability (G) studies,
+d mvdstudy performs decision (D) studies, and mvcrr computes
+d projected construct-relevant reliability.
+d
+d Requires: Stata version 16
+d
+d Author: Steffen Erickson, University of Virginia
+d Support: email cns8vg@virginia.edu
+d
+d Distribution-Date: 20260819
+d
+f mvgstudy.ado
+f mvgstudy.sthlp
+f mvdstudy.sthlp
+f mvcrr.sthlp
+f mvgstudyexampledata.dta
+f mvcrrexampledata.dta

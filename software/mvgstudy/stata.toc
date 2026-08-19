@@ -1,0 +1,4 @@
+v 3
+d Steffen Erickson Stata packages
+d
+p mvgstudy Multivariate generalizability and decision studies (mvgstudy, mvdstudy, mvcrr)
