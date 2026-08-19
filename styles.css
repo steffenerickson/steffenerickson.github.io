@@ -4,12 +4,6 @@
   font-size: 1.05rem;
 }
 
-/* Keep full-layout pages readable: cap line length while staying flush left */
-.quarto-layout-full main,
-main.page-layout-full {
-  max-width: 60rem;
-}
-
 /* Slightly tighter CV layout */
 .cv-page h2 {
   border-bottom: 1px solid #ddd;
