@@ -17,11 +17,11 @@ about:
       href: mailto:cns8vg@virginia.edu
 ---
 
-I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. My research answers two questions that arise whenever a new technology is deployed at scale: **does it work**, and **can we trust how we measure it?** I approach the first with causal inference and program evaluation — quasi-experimental designs, within-study comparisons, and policy-relevant estimands — and the second with measurement science: psychometric modeling, generalizability theory, and instrument validation.
+I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. I study new technologies in schools, asking two questions: **do they actually help students**, and **can we trust the data we use to decide?**
 
-My dissertation applies both toolkits to emerging technology in schools. One chapter evaluates a hybrid tutoring program that pairs adaptive learning software with live virtual tutoring, developing an "estimand ladder" that carries a regression discontinuity estimate from the eligibility cutoff to the full assigned population. Another develops a reliability framework for scores produced by large language model classifiers, showing how to select LLM scoring systems that yield dependable measurements of human behavior — with classroom observation as the application.
+My dissertation takes on both. One chapter evaluates a tutoring program that combines adaptive software with live virtual tutors, developing a method for extending credible causal estimates from the narrow group where they are cleanest to the full population a district actually serves. Another asks when scores produced by AI language models can be trusted to measure human behavior — using classroom observations of teachers as the test case — and provides a framework for choosing among AI scoring systems before deploying them.
 
-While my applied work centers on education, the underlying problems — extrapolating causal effects beyond where they are best identified, and quantifying the reliability of AI-generated measurements — are general. I build statistical software in Stata/Mata and work in R and Python.
+Though my applications are in education, both problems are general: any field adopting new technology has to estimate effects beyond where the evidence is strongest, and increasingly has to decide whether AI-generated measurements are reliable enough to act on. I build statistical software in Stata/Mata and work in R and Python.
 
 ## Education
 
