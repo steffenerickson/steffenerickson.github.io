@@ -1,0 +1,100 @@
+---
+title: "mvgstudy"
+description: "Stata commands for multivariate generalizability and decision studies: variance/covariance component estimation with bootstrap BCa inference, D-study projections, and reliability criteria for LLM-classifier measurement designs."
+categories: [Stata, psychometrics, generalizability theory]
+repo: https://github.com/steffenerickson/mvgstudy
+version: "1.3.2"
+# doi: https://doi.org/10.5281/zenodo.XXXXXXX
+---
+
+::: {.callout-note appearance="simple" icon=false}
+**Version {{< meta version >}}**
+· [GitHub]({{< meta repo >}})
+· [Issues]({{< meta repo >}}/issues)
+:::
+
+## What it does
+
+`mvgstudy` estimates variance and covariance components for multifaceted generalizability (G-study) designs, following Brennan (2001). It supports any combination of crossed and nested facets, univariate and multivariate outcomes, balanced and unbalanced designs, and data with missing outcome values. For balanced designs it uses the SSCP-based method-of-moments estimator derived from a MANOVA decomposition; for unbalanced designs it automatically switches to the exact CP-terms estimator (Brennan, 2001, Sec. 11.1.3), solving the linear system directly with no harmonic-mean approximation.
+
+Existing Stata options for G-theory stop at univariate, balanced designs and point estimates. `mvgstudy` adds three things researchers routinely need: **multivariate designs** (full covariance component matrices for each effect, not just variances), **exact handling of unbalanced data** (unequal cell sizes and missing observations, detected and handled automatically), and **statistical inference** — bootstrap standard errors and bias-corrected accelerated (BCa) confidence intervals via cluster-level resampling of any facet or combination of facets, following the Li et al. (2023) taxonomy of bootstrap units.
+
+The package ships as a suite of three commands:
+
+| Command | Purpose |
+|---|---|
+| `mvgstudy` | G-study: variance and covariance component estimation, with optional bootstrap |
+| `mvdstudy` | D-study: projects reliability coefficients (Eρ², Φ) and error/true-score variances over proposed facet sample sizes, with bootstrap CIs propagated from the G-study |
+| `mvcrr` | Projected construct-relevant reliability (CRR) for LLM-classifier measurement designs, with optional bootstrap BCa CIs |
+
+## Installation
+
+From GitHub:
+
+```stata
+net install mvgstudy, from("https://raw.githubusercontent.com/steffenerickson/mvgstudy/main/") replace
+```
+
+Requirements: Stata 16 or later. No dependencies outside official Stata.
+
+## Quick start
+
+A fully-crossed persons × items × raters design with two outcomes:
+
+```stata
+use mvgstudyexampledata.dta, clear
+mvgstudy (x1 x2 = p i h p#i p#h i#h p#i#h)
+```
+
+For fully-crossed or purely-nested designs, only the residual term is needed — the full termlist is expanded automatically:
+
+```stata
+mvgstudy (x1 x2 = p#i#h)     // expands to p i h p#i p#h i#h p#i#h
+mvgstudy (x1 = p|i|h)        // expands to h i|h p|i|h
+```
+
+## Main features
+
+### Multivariate covariance components
+
+When the outcome list contains multiple variables, each effect gets a full covariance component (EMCP) matrix rather than a scalar variance, supporting multivariate G-theory analyses such as composite reliability and profile dependability.
+
+### Unbalanced designs, handled exactly
+
+Unequal cell sizes are detected automatically and estimated with the exact CP-terms method — unbiased and consistent, with a documented fallback (and warning) to the harmonic-mean approximation only when the coefficient matrix is rank-deficient. Eight canonical designs (p×i, i:p, p×i×h, p×(i:h), (i:p)×h, i:(p×h), (i×h):p, i:h:p) are validated against hand calculations under both balance and random missingness.
+
+### Bootstrap inference
+
+The `bootstrap` option adds standard errors and BCa confidence intervals for every component via cluster-level resampling. The resampling unit is any facet or set of facets (`bootunit(p)`, `bootunit(p i)`, …), with within-parent-group resampling for nested facets. The stored bootstrap distribution propagates automatically to `mvdstudy`, so D-study reliability projections carry confidence intervals too:
+
+```stata
+mvgstudy (x1 x2 = p i h p#i p#h i#h p#i#h), bootstrap reps(1000) seed(42)
+mvdstudy, object(p) errortype(relative) current bootstrap ci_level(95)
+```
+
+### Decision studies and LLM measurement designs
+
+`mvdstudy` projects generalizability and phi coefficients over hypothetical facet sample sizes — the classic "how many raters and lessons do I need?" question. `mvcrr` extends the framework to LLM-classifier scoring systems, computing the projected construct-relevant reliability criterion developed in [Chapter 2 of my dissertation](../../chapters/ch2/index.qmd).
+
+## Syntax reference
+
+Full syntax, options, termlist-expansion rules, and validated-design tables are in the help files (`help mvgstudy`, `help mvdstudy`, `help mvcrr`) shipped with the package.
+
+## Citation
+
+```bibtex
+@software{erickson2026mvgstudy,
+  author  = {Erickson, Steffen},
+  title   = {mvgstudy: Stata commands for multivariate generalizability and decision studies},
+  version = {1.3.2},
+  year    = {2026},
+  url     = {https://github.com/steffenerickson/mvgstudy}
+}
+```
+
+A companion paper is in preparation for the *Stata Journal*.
+
+## References
+
+- Brennan, R. L. (2001). *Generalizability theory*. Springer.
+- Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.

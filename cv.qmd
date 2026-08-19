@@ -1,0 +1,84 @@
+---
+title: "Curriculum Vitae"
+format:
+  html: default
+---
+
+::: {.cv-page}
+
+**Email:** cns8vg@virginia.edu
+
+## Profile
+
+Steffen Erickson is a PhD candidate in the Education Policy program at the University of Virginia. His research centers on developing instruments, building psychometric models, and designing research studies to measure educational constructs and understand intervention effects. His applied work focuses on teacher preparation and evaluation, contributing to research on how teachers develop instructional skills and advancing new approaches for measuring teaching quality and career readiness.
+
+**Research interests:** Measurement & Psychometrics · Causal Inference · Teacher Preparation and Evaluation
+
+## Education
+
+**University of Virginia** — Charlottesville, VA
+PhD, Education Policy, Fall 2022 – Summer 2026 (expected). Advisor: Vivian Wong
+
+**University of Virginia** — Charlottesville, VA
+Master of Public Policy, Fall 2022 – 2024
+
+**University of Virginia** — Charlottesville, VA
+Master of Quantitative Methods, Fall 2021 – Spring 2022
+
+**Virginia Tech** — Blacksburg, VA
+BS in Agricultural Economics, Fall 2015 – Spring 2019
+
+## Fellowships & Scholarships
+
+- Institute for Education Sciences (IES) Pre-Doctoral Fellow, 2022 – Present
+- Robert Septimus Pace, Jr., Scholarship, 2023
+
+## Published Papers
+
+- Cohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. *Educational Researcher, 53*(1), 19–35.
+- Wilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates' perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. *AERA Open, 11*, 23328584251375064.
+- Suhr, M., Erickson, S., Kelcey, B., Mclean, L., Cohen, J., & Jones, N. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. *Educational Assessment*.
+- Cohen, J., Jones, N., Wong, V. C., Quinn, A., Erickson, S., Parten, H., & Suhr, M. (in press). Practice-based, online modules for expediting teacher skill development. *Educational Evaluation and Policy Analysis*. [EdWorkingPaper No. 26-1460](https://doi.org/10.26300/vp80-mq53)
+
+## Work In Progress
+
+- Erickson, S. (in preparation). The effects of combining personalized learning technology and virtual tutoring on student achievement outcomes. Target journal: *Educational Evaluation and Policy Analysis*.
+- Erickson, S. (in preparation). The dependability of large language model (LLM) classroom observation systems for making inferences about teachers' instructional practices. Target journal: *Journal of Educational and Behavioral Statistics*.
+- Erickson, S. (in preparation). Hierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education. Target journal: *American Educational Research Journal*.
+- Erickson, S. (in preparation). mvgstudy: Stata commands for analyzing multivariate generalizability and decision studies. Target journal: *Stata Journal*.
+- Therrien, B., Doabler, C., & Erickson, S. (in preparation). Practice opportunities and the pursuit of scientific literacy for students with learning disabilities.
+
+## Scholarly Presentations
+
+- *The effects of combining personalized learning technology and virtual tutoring on student achievement outcomes.* Paper presentation, EdPolicyWorks Policy Lab, November 2025
+- *Hierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education.* Paper presentation, EdPolicyWorks Policy Lab, April 2025
+- *Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs.* Paper presentation, AEFP, March 2025
+- *Assessing causality within structural equation models with latent variables.* Paper presentation, SREE, September 2024
+- *Model validation in the presence of multifaceted error.* Paper presentation, International Meeting of the Psychometric Society, July 2024
+- *Causal models for skill development.* Paper presentation, EdPolicyWorks Policy Lab, March 2024
+- *Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs.* Poster presentation, PCRC, February 2024
+- *Evaluation of simulated learning in teacher preparation across universities.* Paper presentation, APPAM, November 2023
+- *Data systems for randomized control trials.* Tutorial, TeachSim Group, September 2023
+
+## Teaching
+
+**Education Policy UVA 4080** — Teaching Assistant, Fall 2025
+
+## Professional Experience
+
+**Edmentum** — Remote
+Graduate Student Intern, Efficacy Research, June 2025 – August 2025
+
+**NWEA** — Remote
+Graduate Student Intern, Growth Modeling and Data Analytics, June 2022 – September 2022
+
+**Teach For America** — San Antonio, TX
+Corps Member, June 2019 – August 2021
+
+## Skills
+
+- **Programming:** Stata and Mata (developer); R, Python, LaTeX (advanced)
+- Research design · Statistical modeling · Instrument development and validation
+- Data visualization · Technical writing · Natural language processing
+
+:::

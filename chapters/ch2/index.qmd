@@ -1,0 +1,36 @@
+---
+title: "Chapter 2: Reliable Measurement with LLM Classifiers"
+description: "A generalizability-theory framework for scores produced by large language model classifiers — reliability coefficients and selection criteria for count-based measurement systems."
+order: 2
+categories: [measurement, psychometrics, generalizability theory, LLMs, AI evaluation]
+status: "Working paper"
+# paper-url: ../../files/ch2.pdf
+# code-url: https://github.com/steffenerickson/ch2-repo
+# data-url: https://doi.org/10.5281/zenodo.XXXXXXX
+---
+
+::: {.callout-note appearance="simple" icon=false}
+**Status:** {{< meta status >}} · Paper, code, and data links coming soon
+:::
+
+*Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers: Coefficients and Selection Criteria for Low-Inference Count-Based Systems*
+
+## The problem
+
+Organizations increasingly use large language models to score human behavior at scale — classifying utterances in transcripts, rating interactions, coding open-ended responses. Validation typically stops at agreement with expert labels (kappa, ICC, correlation). But agreement measures classification accuracy, not **reliability**: whether the scores rank people consistently across replications of the measurement procedure. A classifier can agree well with humans on average and still produce person-level scores dominated by noise — or worse, by systematic errors that differ across the people being measured.
+
+## What this study does
+
+I develop a measurement model for scores built by applying a fixed LLM classifier to counts of behaviors across occasions — here, teachers' instructional moves across lessons. The framework extends generalizability theory to the distinctive features of an LLM rater: unlike human raters, an LLM applies the *same* systematic scoring tendencies every time, so its errors cannot be averaged away by sampling more raters. The paper:
+
+- Derives the **reliability coefficient** for classifier-based prevalence scores, decomposing observed-score variance into true differences among people, sampling of occasions, and classifier error — including a **differential classifier functioning (DCF)** component in which the classifier's accuracy varies systematically across the people being measured.
+- Validates the analytic results in **simulation studies** under constant and differential classifier functioning.
+- Applies the framework in a **designed experiment over scoring configurations** (prompts, models, aggregation choices) on a corpus of classroom transcripts, introducing a scalar selection criterion — **projected construct-relevant reliability** — for choosing among candidate LLM scoring systems before deploying them.
+
+## Why it matters beyond education
+
+Any AI-based measurement system — evaluating call-center interactions, moderating content, scoring interviews, monitoring model behavior — faces the same question: are the scores reliable enough to support decisions about people? This framework gives builders of such systems the coefficients to answer it and a principled criterion for selecting among candidate configurations, rather than relying on label agreement alone.
+
+## Skills demonstrated
+
+Generalizability theory & variance-components modeling · psychometric derivation and simulation · LLM evaluation and prompt/configuration experiments · instrument validation · reliability engineering for AI measurement pipelines · R, Python, Stata

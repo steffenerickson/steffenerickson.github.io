@@ -1,0 +1,33 @@
+project:
+  type: website
+  render:
+    - "*.qmd"
+
+website:
+  title: "Steffen Erickson"
+  # site-url: https://steffenerickson.github.io/REPO   # set once the GitHub repo exists
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: chapters/index.qmd
+        text: Dissertation
+      - href: software/index.qmd
+        text: Software
+      - href: cv.qmd
+        text: CV
+    right:
+      - icon: github
+        href: https://github.com/steffenerickson
+      - icon: envelope
+        href: mailto:cns8vg@virginia.edu
+  page-footer:
+    left: "© 2026 Steffen Erickson"
+    right: "Built with [Quarto](https://quarto.org)"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-copy: true

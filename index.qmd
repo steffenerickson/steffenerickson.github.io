@@ -1,0 +1,35 @@
+---
+title: "Steffen Erickson"
+image: images/headshot.jpg
+toc: false
+about:
+  template: trestles
+  image-shape: round
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/steffenerickson
+    - icon: file-earmark-pdf
+      text: CV
+      href: cv.qmd
+    - icon: envelope
+      text: Email
+      href: mailto:cns8vg@virginia.edu
+---
+
+I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. My research answers two questions that arise whenever a new technology is deployed at scale: **does it work**, and **can we trust how we measure it?** I approach the first with causal inference and program evaluation — quasi-experimental designs, within-study comparisons, and policy-relevant estimands — and the second with measurement science: psychometric modeling, generalizability theory, and instrument validation.
+
+My dissertation applies both toolkits to emerging technology in schools. One chapter evaluates a hybrid tutoring program that pairs adaptive learning software with live virtual tutoring, developing an "estimand ladder" that carries a regression discontinuity estimate from the eligibility cutoff to the full assigned population. Another develops a reliability framework for scores produced by large language model classifiers, showing how to select LLM scoring systems that yield dependable measurements of human behavior — with classroom observation as the application.
+
+While my applied work centers on education, the underlying problems — extrapolating causal effects beyond where they are best identified, and quantifying the reliability of AI-generated measurements — are general. I build statistical software in Stata/Mata and work in R and Python.
+
+## Education
+
+- **PhD, Education Policy** — University of Virginia, expected 2026
+- **MPP** — University of Virginia, 2024
+- **MS, Quantitative Methods** — University of Virginia, 2022
+- **BS, Agricultural Economics** — Virginia Tech, 2019
+
+## Interests
+
+Causal inference & program evaluation · Measurement & psychometrics · LLM-based measurement systems · Generalizability theory · Statistical software development (Stata/Mata, R, Python)

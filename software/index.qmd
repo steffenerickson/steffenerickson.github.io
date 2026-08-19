@@ -1,0 +1,9 @@
+---
+title: "Software"
+listing:
+  contents: "*/index.qmd"
+  type: grid
+  fields: [title, description, categories]
+---
+
+Stata packages developed for my research. All are open source; issues and pull requests welcome.

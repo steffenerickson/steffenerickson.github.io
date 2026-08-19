@@ -1,0 +1,12 @@
+---
+title: "Dissertation"
+subtitle: "Evaluating and Measuring Emerging Technology in Schools"
+listing:
+  contents: "*/index.qmd"
+  type: default
+  sort: "order"
+  fields: [title, description, categories]
+  categories: false
+---
+
+New technologies — adaptive learning platforms, virtual tutoring, large language models — are entering schools faster than the evidence base can keep up. My dissertation builds the evidence two ways. The first chapter is a program evaluation: it asks whether a hybrid tutoring intervention works, and for whom, developing a causal-inference strategy that generalizes a regression discontinuity estimate from the eligibility cutoff to the full population a program serves. The second chapter is a measurement study: it asks when scores produced by LLM classifiers are reliable enough to support inferences about people, developing a generalizability-theory framework for AI-based measurement systems. Together the chapters cover the two questions any organization deploying new technology must answer — does it work, and can we trust how we measure it.
