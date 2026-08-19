@@ -32,4 +32,4 @@ Though my applications are in education, both problems are general: any field ad
 
 ## Interests
 
-Causal inference & program evaluation · Measurement & psychometrics · LLM-based measurement systems · Generalizability theory · Statistical software development (Stata/Mata, R, Python)
+Causal inference & program evaluation · Measurement & psychometrics · LLM-based measurement systems · Generalizability theory · Statistical software development
