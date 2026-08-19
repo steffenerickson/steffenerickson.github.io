@@ -16,9 +16,13 @@ status: "Working paper"
 *Generalizing Beyond the Cutoff: A Within-Study Comparison of Regression Discontinuity and Difference-in-Differences Estimates of a Hybrid Tutoring Program*
 (with Vivian Wong and Amy Dray)
 
-## The problem
+## Abstract
 
-Programs that ration services with an eligibility cutscore — a diagnostic threshold, a means test, a biomarker cutoff — are naturally evaluated with regression discontinuity designs. But an RD identifies the effect only for people at the margin of eligibility, and a targeted program's margin is precisely where its theory of change matters least: the people the program exists to serve sit far below the threshold, where the discontinuity is silent. Every decision a decision-maker actually faces — whether to adopt, how many seats to fund, where to set the threshold — turns on the effect for the full assigned population.
+Programs that ration services with an eligibility cutscore are naturally evaluated with regression discontinuity designs, but an RD identifies the effect only at the margin of eligibility — precisely where a targeted program's theory of change matters least. We evaluate Targeted Skills Instruction (TSI), a virtual tutoring program integrated with an adaptive learning platform, using a two-year panel of interim assessment scores from a large urban school district. We develop a local-to-global estimand ladder that carries a single intent-to-treat estimand from the cutoff to the full assigned population in four rungs — sharp RD, difference-in-discontinuities, inverse probability-weighted difference-in-differences, and a six-period event study — with each rung changing exactly one element and the local-to-global move disciplined by an exact algebraic bridge between the RD and DiD estimators. In reading, the effect strengthens beyond the cutoff: 0.11 SD at the margin, 0.18 near the cutoff, and 0.25 for the full assigned population, a gradient consistent with the program's targeting of students furthest behind. In mathematics, the ladder is diagnostic rather than confirmatory: the cutoff benchmark is null once a pre-existing gap is differenced out, and full-population estimates are not robust to alternative weighting, so the evidence rules out benefit rather than demonstrating harm.
+
+## Translational abstract
+
+Many programs serve only the students who score below a cutoff, and the most credible way to evaluate them compares students just below the line to students just above it. But that comparison only tells you about students near the cutoff — not the students far below it, whom the program was built to help. This study evaluates a tutoring program that combines adaptive software with live virtual tutors, and develops a method for extending the credible estimate at the cutoff, one testable step at a time, to every student the program actually served. In reading, the program helped — and helped most for the students furthest behind, exactly the pattern you'd hope for from a targeted program. An evaluation confined to the cutoff would have understated its value for the students it exists to serve. In mathematics, the same method showed the program had no measurable benefit.
 
 ## What this study does
 
@@ -31,14 +35,3 @@ I evaluate Targeted Skills Instruction (TSI), a virtual tutoring program integra
 
 Each rung changes exactly one element (outcome, estimator, population, panel length), and the move from the cutoff to the full population is disciplined by an **exact algebraic bridge**: restricted to the RD bandwidth, the two-period IPW difference-in-differences is identical to a sharp RD on the change score. Widening the sample therefore changes the population the effect is averaged over — not the design.
 
-## Findings
-
-In reading, the effect generalizes and *strengthens* beyond the cutoff: 0.11 SD at the margin, 0.18 near the cutoff, 0.25 for the full assigned population — a gradient consistent with the program's targeting of students furthest behind. In mathematics, the ladder is diagnostic rather than confirmatory: the cutoff benchmark is null once a pre-existing gap is differenced out, and the negative full-population estimates are not robust to alternative weighting, so we interpret the mathematics evidence as ruling out benefit rather than demonstrating harm.
-
-## Why it matters beyond education
-
-Cutoff-based assignment is everywhere — clinical treatments, benefit programs, marketing interventions, credit decisions. This study shows how to anchor a credible estimate where identification is strongest and extend it, with testable assumptions at every step, to the population that decisions are actually about. An evaluation confined to the margin would have understated the program's value for exactly the people it exists to serve.
-
-## Skills demonstrated
-
-Quasi-experimental design (RD, difference-in-discontinuities, DiD, event studies) · propensity score / inverse probability weighting · within-study comparison methodology · panel data analysis · large-scale administrative data linkage · Stata
