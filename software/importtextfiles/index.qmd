@@ -64,3 +64,15 @@ The command returns the number of files read in `r(N)`, along with the directory
 ## Syntax reference
 
 Full syntax and options are in the help file (`help importtextfiles`) shipped with the package.
+
+## Citation
+
+```bibtex
+@software{erickson2026importtextfiles,
+  author  = {Erickson, Steffen},
+  title   = {importtextfiles: Stata command to read a directory of text files into strL variables},
+  version = {1.0.0},
+  year    = {2026},
+  url     = {https://github.com/steffenerickson/importtextfiles}
+}
+```
