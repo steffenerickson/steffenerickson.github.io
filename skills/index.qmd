@@ -1,0 +1,11 @@
+---
+title: "Claude Skills"
+listing:
+  contents: "*/index.qmd"
+  type: grid
+  fields: [title, description, categories]
+---
+
+Skills I have written for [Claude Code](https://claude.com/claude-code). A skill is a folder with a `SKILL.md` file that Claude loads when a task matches its description, so the same conventions get applied every time instead of being re-explained in each conversation.
+
+To install one, put its folder in `~/.claude/skills/` (available in every project) or `.claude/skills/` inside a project.

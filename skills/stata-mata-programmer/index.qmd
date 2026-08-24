@@ -1,0 +1,46 @@
+---
+title: "stata-mata-programmer"
+description: "Claude Code skill for writing and reviewing Stata .ado programs, the Mata code inside them, and the .sthlp help files that ship with them."
+categories: [Claude Code, Stata, Mata]
+---
+
+::: {.callout-note appearance="simple" icon=false}
+**Skill file** · [SKILL.md](SKILL.md)
+:::
+
+## What it does
+
+This skill teaches Claude how I write Stata packages: an `.ado` wrapper that parses, validates, displays results, and returns them; a Mata engine underneath it; and a help file that matches the command's syntax line for line. Without it, Claude writes Stata that runs but does not look like a package — no `syntax` validation, no stored results, no help file, and Mata code that breaks in batch mode.
+
+It loads automatically when a request involves `.ado`, `.mata`, or `.sthlp` files, or a `.do` file containing `mata` blocks. Data cleaning and dataset assembly are covered by a separate skill.
+
+## Installation
+
+```bash
+git clone https://github.com/steffenerickson/claude-skills ~/tmp-skills
+cp -r ~/tmp-skills/stata-mata-programmer ~/.claude/skills/
+```
+
+Or simply save [SKILL.md](SKILL.md) to `~/.claude/skills/stata-mata-programmer/SKILL.md`.
+
+## What is in it
+
+### A required first pass
+
+Before writing code, Claude has to answer six questions out loud: is this a new command, a new option, or a class extension; what crosses the Stata–Mata boundary and in which direction; does the command depend on state left behind by another command; what does the caller get back in `r()` or `e()`; is memoization needed; and which files change. The last one matters most — a new option touches the `.ado`, the Mata method, and the help file, and the skill requires all three or an explicit statement of what was skipped.
+
+### Stata conventions
+
+File layout for a package `.ado` with post-estimation commands, program anatomy, and rules for the Stata–Mata boundary: every `st_local()`, `st_matrix()`, `st_numscalar()`, and `st_data()` call, plus save-and-restore patterns for operations that mutate a persistent Mata object.
+
+### Mata conventions
+
+Class organization with an explicit public/private split, shared computation cores so variants do not drift apart, explicit type declarations, error handling, `asarray` memoization, whole-token string matching, matrix algebra and replicate bookkeeping, and the pitfalls that only appear under `stata -b do`.
+
+### Help files
+
+A `.sthlp` skeleton in SMCL plus the rules that keep it honest: the syntax line, the option table, the option descriptions, and the stored results all have to agree with the `.ado` that ships beside them.
+
+### Testing and a pitfall index
+
+A short testing section and a quick index of the mistakes the rest of the document exists to prevent.

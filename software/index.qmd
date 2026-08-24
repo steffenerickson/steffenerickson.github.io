@@ -7,3 +7,5 @@ listing:
 ---
 
 Stata packages developed for my research. All are open source; issues and pull requests welcome.
+
+The code is maintained using [Claude Code](https://claude.com/claude-code) with my [stata-mata-programmer](../skills/stata-mata-programmer/index.qmd) skill.

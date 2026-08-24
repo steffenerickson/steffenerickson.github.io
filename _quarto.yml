@@ -14,6 +14,8 @@ website:
         text: Dissertation
       - href: software/index.qmd
         text: Software
+      - href: skills/index.qmd
+        text: Claude Skills
       - href: cv.qmd
         text: CV
     right:
