@@ -10,7 +10,7 @@ status: "Working paper"
 ---
 
 ::: {.callout-note appearance="simple" icon=false}
-**Status:** {{< meta status >}} · Paper, code, and data links coming soon
+**Status:** {{< meta status >}} · Paper, code, and data links coming soon · [**Interactive simulation explorer →**](simulation.qmd)
 :::
 
 *Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers: Coefficients and Selection Criteria for Low-Inference Count-Based Systems*

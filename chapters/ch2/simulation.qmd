@@ -1,0 +1,269 @@
+---
+title: "Interactive Simulation Explorer"
+description: "Explore the chapter's closed-form reliability results and simulation evidence: a pure-formula calculator, theory-vs-simulation validation, and interactive versions of the key figures."
+order: 3
+categories: [measurement, psychometrics, generalizability theory, LLMs, simulation]
+format:
+  html:
+    toc: true
+    page-layout: article
+---
+
+All curves below are computed live from the chapter's closed-form expressions; the points are Monte Carlo estimates from the simulation studies (1,000 replications per cell). Every number traces to `simulation/output/`.
+
+```{ojs}
+//| echo: false
+sim1 = FileAttachment("data/sim1.csv").csv({typed: true})
+sim2 = FileAttachment("data/sim2.csv").csv({typed: true})
+
+// Chapter formulas (redraft v7, Eqs. for E-rho^2, lambda, CRR)
+function reliability({J, s2pi, s2piLP, eps2, nL, mupi, saP = 0, sjP = 0, saLP = 0, sjLP = 0}) {
+  const st2  = J * J * s2pi + saP + sjP * (mupi * mupi + s2pi);
+  const sLP2 = saLP + (J * J + sjP) * s2piLP
+             + sjLP * (mupi * mupi + s2pi + s2piLP) + eps2;
+  const rho    = st2 / (st2 + sLP2 / nL);
+  const lambda = (J * J * s2pi) / st2;
+  const crr    = (J * J * s2pi) / (st2 + ((J * J + sjP) * s2piLP + eps2) / nL);
+  return {rho, lambda, crr, st2, sLP2};
+}
+
+// Within-lesson realization error for a hard classifier (draft Eq. for eps-bar^2):
+// A = 1 - sp, J = se + sp - 1, nu1^2 = se(1-se), nu0^2 = sp(1-sp)
+function epsHard({se, sp, mupi, n}) {
+  const J = se + sp - 1;
+  const nu1 = se * (1 - se), nu0 = sp * (1 - sp);
+  return (mupi * nu1 + (1 - mupi) * nu0 + mupi * (1 - mupi) * J * J) / n;
+}
+
+C = ({blue: "#2a78d6", orange: "#eb6834", aqua: "#1baf7a", grid: "#e1e0d9",
+      ink: "#0b0b0b", ink2: "#52514e", muted: "#898781", wash: "rgba(227,73,72,0.10)"})
+
+fmt = d3.format(".3f")
+```
+
+## Design-your-study calculator
+
+Set the classifier's operating characteristics, the prevalence structure of the practice, and the sampling design; the calculator returns the projected reliability coefficient $E\rho^2$, the prevalence-driven share of universe-score variance $\lambda$, and projected construct-relevant reliability $\mathrm{CRR} = \lambda \times E\rho^2_{DCF:P}$, all from the chapter's closed-form expressions. The classifier is treated as a hard classifier, so sensitivity and specificity determine the intercept $A = 1-sp$, the separation $\bar{J} = se + sp - 1$, and the Bernoulli class variances that enter the realization-error term.
+
+```{ojs}
+//| echo: false
+viewof se   = Inputs.range([0.5, 0.99], {value: 0.855, step: 0.005, label: "Sensitivity (se)"})
+viewof sp   = Inputs.range([0.5, 0.99], {value: 0.743, step: 0.005, label: "Specificity (sp)"})
+viewof mupi = Inputs.range([0.02, 0.5], {value: 0.10, step: 0.005, label: "Mean prevalence μπ"})
+viewof sdpi   = Inputs.range([0.01, 0.20], {value: 0.048, step: 0.001, label: "SD of person prevalence σπ"})
+viewof sdpiLP = Inputs.range([0.01, 0.25], {value: 0.052, step: 0.001, label: "SD of lesson prevalence σπ,L:P"})
+viewof nseg = Inputs.range([10, 400], {value: 81, step: 1, label: "Segments per lesson n"})
+viewof nLsel = Inputs.range([1, 20], {value: 12, step: 1, label: "Lessons per person n_L"})
+```
+
+<details><summary>Differential classifier functioning (advanced — defaults to none)</summary>
+
+```{ojs}
+//| echo: false
+viewof sd_aP  = Inputs.range([0, 0.15], {value: 0, step: 0.005, label: "Person DCF in intercept σ(a_p)"})
+viewof sd_jP  = Inputs.range([0, 0.30], {value: 0, step: 0.005, label: "Person DCF in separation σ(j_p)"})
+viewof sd_aLP = Inputs.range([0, 0.15], {value: 0, step: 0.005, label: "Lesson DCF in intercept σ(a_pl)"})
+viewof sd_jLP = Inputs.range([0, 0.30], {value: 0, step: 0.005, label: "Lesson DCF in separation σ(j_pl)"})
+```
+
+</details>
+
+```{ojs}
+//| echo: false
+calc = {
+  const J = se + sp - 1;
+  const base = {J, mupi, s2pi: sdpi ** 2, s2piLP: sdpiLP ** 2,
+    eps2: epsHard({se, sp, mupi, n: nseg}),
+    saP: sd_aP ** 2, sjP: sd_jP ** 2, saLP: sd_aLP ** 2, sjLP: sd_jLP ** 2};
+  return {...reliability({...base, nL: nLsel}), base};
+}
+
+html`<div style="display:flex;gap:12px;flex-wrap:wrap;margin:0.75rem 0;">
+  ${[["Projected reliability  Eρ²", calc.rho],
+     ["Prevalence share  λ", calc.lambda],
+     ["Construct-relevant reliability  CRR", calc.crr]].map(([t, v]) => html`
+  <div style="flex:1;min-width:170px;border:1px solid rgba(11,11,11,0.10);border-radius:8px;padding:12px 16px;background:#fcfcfb;">
+    <div style="font-size:0.8rem;color:${C.ink2};">${t}</div>
+    <div style="font-size:1.9rem;font-weight:600;color:${C.ink};">${fmt(v)}</div>
+  </div>`)}
+</div>`
+```
+
+```{ojs}
+//| echo: false
+//| fig-cap: "Projected reliability and CRR as lessons are added, under the settings above. The gap between the two curves is variance the coefficient certifies that is classifier artifact rather than the practice."
+{
+  const rows = d3.range(1, 21).flatMap(nL => {
+    const r = reliability({...calc.base, nL});
+    return [{nL, y: r.rho, series: "Eρ² (coefficient)"},
+            {nL, y: r.crr, series: "CRR (construct-relevant)"}];
+  });
+  return Plot.plot({
+    width: 680, height: 340, marginLeft: 45,
+    style: {background: "transparent", color: C.ink2},
+    x: {label: "Lessons per person (n_L)", ticks: [1, 4, 8, 12, 16, 20]},
+    y: {label: "Reliability", domain: [0, 1], grid: true},
+    color: {domain: ["Eρ² (coefficient)", "CRR (construct-relevant)"],
+            range: [C.blue, C.orange], legend: true},
+    marks: [
+      Plot.ruleY([0], {stroke: "#c3c2b7"}),
+      Plot.lineY(rows, {x: "nL", y: "y", stroke: "series", strokeWidth: 2}),
+      Plot.text(rows.filter(d => d.nL === 20),
+        {x: "nL", y: "y", text: d => fmt(d.y), dx: 8, textAnchor: "start", fill: C.ink}),
+      Plot.tip(rows, Plot.pointer({x: "nL", y: "y",
+        title: d => `${d.series}\nn_L = ${d.nL}\n${fmt(d.y)}`}))
+    ]
+  });
+}
+```
+
+## Theory vs. simulation
+
+Before trusting the calculator, check its formulas against the Monte Carlo evidence. Each point is one simulated design cell: the horizontal position is the closed-form prediction, the vertical position the Monte Carlo estimate over 1,000 replications. Points on the diagonal mean the analytic derivations reproduce the simulation.
+
+```{ojs}
+//| echo: false
+//| fig-cap: "Closed-form prediction vs. Monte Carlo estimate for every design cell in simulations 1 and 2 (soft scoring)."
+{
+  const pts = [
+    ...sim1.map(d => ({x: d.rho2_cf_soft, y: d.rho2_mc_soft, study: "Simulation 1 (no DCF)"})),
+    ...sim2.map(d => ({x: d.rho2_cf_soft, y: d.rho2_mc_soft, study: "Simulation 2 (DCF)"}))
+  ];
+  return Plot.plot({
+    width: 480, height: 480, marginLeft: 45,
+    style: {background: "transparent", color: C.ink2},
+    x: {label: "Closed-form Eρ²", domain: [0, 1], grid: true},
+    y: {label: "Monte Carlo estimate", domain: [0, 1], grid: true},
+    color: {domain: ["Simulation 1 (no DCF)", "Simulation 2 (DCF)"],
+            range: [C.blue, C.orange], legend: true},
+    marks: [
+      Plot.line([[0, 0], [1, 1]], {stroke: C.muted, strokeDasharray: "4 3"}),
+      Plot.dot(pts, {x: "x", y: "y", stroke: "study", r: 3, strokeWidth: 1.25}),
+      Plot.tip(pts, Plot.pointer({x: "x", y: "y",
+        title: d => `${d.study}\ntheory ${fmt(d.x)} · simulation ${fmt(d.y)}`}))
+    ]
+  });
+}
+```
+
+## Reliability by transcript length and classifier accuracy
+
+An interactive version of Figure 1. Pick the classifier's sensitivity and specificity and the scoring mode; the curve is the closed-form prediction across transcript lengths and the points are the Monte Carlo estimates (simulation 1, grid block: 51 persons, 12 lessons).
+
+```{ojs}
+//| echo: false
+viewof f1se = Inputs.select([0.6, 0.7, 0.8, 0.9, 0.95], {value: 0.8, label: "Sensitivity"})
+viewof f1sp = Inputs.select([0.6, 0.7, 0.8, 0.9, 0.95], {value: 0.8, label: "Specificity"})
+viewof f1ks = Inputs.radio(new Map([["Diffuse scoring (κ_s = .13)", 0.13], ["Confident scoring (κ_s = 3.6)", 3.6]]), {value: 0.13, label: "Scoring mode"})
+```
+
+```{ojs}
+//| echo: false
+//| fig-cap: "Reliability vs. segments per transcript. Line: closed form; points: Monte Carlo (soft scoring)."
+{
+  const rows = sim1.filter(d => d.block === "B_grid" && d.se_t === f1se && d.sp_t === f1sp && d.ks === f1ks)
+                   .sort((a, b) => a.nbar - b.nbar);
+  return Plot.plot({
+    width: 680, height: 340, marginLeft: 45,
+    style: {background: "transparent", color: C.ink2},
+    x: {label: "Segments per transcript (n)", type: "log", ticks: [25, 50, 100, 200, 400], tickFormat: d3.format("d")},
+    y: {label: "Reliability Eρ²", domain: [0, 1], grid: true},
+    marks: [
+      Plot.ruleY([0], {stroke: "#c3c2b7"}),
+      Plot.lineY(rows, {x: "nbar", y: "rho2_cf_soft", stroke: C.blue, strokeWidth: 2}),
+      Plot.dot(rows, {x: "nbar", y: "rho2_mc_soft", stroke: C.blue, fill: "#fcfcfb", r: 4.5, strokeWidth: 1.5}),
+      Plot.tip(rows, Plot.pointer({x: "nbar", y: "rho2_mc_soft",
+        title: d => `n = ${d.nbar}\ntheory ${fmt(d.rho2_cf_soft)}\nsimulation ${fmt(d.rho2_mc_soft)}`}))
+    ]
+  });
+}
+```
+
+## Soft vs. hard scoring
+
+Same design grid, comparing soft (expected-probability) scores against hard (thresholded) scores. The vertical gap is the reliability gain from retaining the classifier's probability output rather than thresholding it.
+
+```{ojs}
+//| echo: false
+viewof shse = Inputs.select([0.6, 0.7, 0.8, 0.9, 0.95], {value: 0.8, label: "Sensitivity"})
+viewof shsp = Inputs.select([0.6, 0.7, 0.8, 0.9, 0.95], {value: 0.8, label: "Specificity"})
+viewof shks = Inputs.radio(new Map([["Diffuse scoring (κ_s = .13)", 0.13], ["Confident scoring (κ_s = 3.6)", 3.6]]), {value: 0.13, label: "Scoring mode"})
+```
+
+```{ojs}
+//| echo: false
+//| fig-cap: "Monte Carlo reliability under soft vs. hard scoring across transcript lengths."
+{
+  const cells = sim1.filter(d => d.block === "B_grid" && d.se_t === shse && d.sp_t === shsp && d.ks === shks)
+                    .sort((a, b) => a.nbar - b.nbar);
+  const rows = cells.flatMap(d => [
+    {nbar: d.nbar, y: d.rho2_mc_soft, series: "Soft"},
+    {nbar: d.nbar, y: d.rho2_mc_hard, series: "Hard"}]);
+  const last = rows.filter(d => d.nbar === cells[cells.length - 1]?.nbar);
+  return Plot.plot({
+    width: 680, height: 340, marginLeft: 45,
+    style: {background: "transparent", color: C.ink2},
+    x: {label: "Segments per transcript (n)", type: "log", ticks: [25, 50, 100, 200, 400], tickFormat: d3.format("d")},
+    y: {label: "Reliability Eρ² (Monte Carlo)", domain: [0, 1], grid: true},
+    color: {domain: ["Soft", "Hard"], range: [C.blue, C.orange], legend: true},
+    marks: [
+      Plot.ruleY([0], {stroke: "#c3c2b7"}),
+      Plot.lineY(rows, {x: "nbar", y: "y", stroke: "series", strokeWidth: 2}),
+      Plot.dot(rows, {x: "nbar", y: "y", stroke: "series", fill: "#fcfcfb", r: 4, strokeWidth: 1.5}),
+      Plot.text(last, {x: "nbar", y: "y", text: "series", dx: 8, textAnchor: "start", fill: C.ink}),
+      Plot.tip(rows, Plot.pointer({x: "nbar", y: "y",
+        title: d => `${d.series} scoring\nn = ${d.nbar}\n${fmt(d.y)}`}))
+    ]
+  });
+}
+```
+
+## DCF explorer — when more lessons make it worse
+
+An interactive version of Figure 7. Three quantities are plotted against lessons per person: the **G coefficient** a practitioner would compute, **replication reliability** (what an actual replication of the procedure would show), and the **construct benchmark** $\rho^2_\pi$ (how well scores rank people on the practice itself). The shaded wedge between coefficient and benchmark is validity-adjusted bias — reproducible variance that is classifier artifact.
+
+Under **person-level DCF**, adding lessons raises the coefficient while the construct benchmark plateaus: more data purchases a more confident certification of the same distortion. Flip the locus to **lesson-level** and DCF behaves as ordinary error — all three curves rise together and additional lessons genuinely cure it.
+
+```{ojs}
+//| echo: false
+viewof dcfLocus = Inputs.radio(new Map([["No DCF", 0], ["Person-level", 1], ["Lesson-level", 2], ["Both loci", 3]]), {value: 1, label: "DCF locus"})
+viewof dcfTau = Inputs.radio([0.15, 0.3, 0.6], {value: 0.3, label: "DCF magnitude τ", format: d3.format(".2f")})
+viewof dcfPar = Inputs.radio(new Map([["Both parameters", 3], ["μ₁ only", 1], ["μ₀ only", 2]]), {value: 3, label: "Perturbed parameter"})
+viewof dcfKs = Inputs.radio(new Map([["Diffuse scoring (κ_s = .13)", 0.13], ["Confident scoring (κ_s = 3.6)", 3.6]]), {value: 0.13, label: "Scoring mode"})
+```
+
+```{ojs}
+//| echo: false
+//| fig-cap: "G coefficient, replication reliability, and construct benchmark vs. lessons per person. The shaded wedge is validity-adjusted bias. Simulation 2, soft scoring."
+{
+  const cells = sim2.filter(d => dcfLocus === 0
+      ? (d.block === "base" && d.ks === dcfKs)
+      : (d.block === "A_dcf" && d.locus === dcfLocus && d.tau === dcfTau && d.dcfpar === dcfPar && d.ks === dcfKs))
+    .sort((a, b) => a.nL - b.nL);
+  const series = [["G coefficient", "rho2_mc_soft", C.blue],
+                  ["Replication reliability", "rho_rep_soft", C.orange],
+                  ["Construct benchmark ρ²π", "rho2pi_soft", C.aqua]];
+  const rows = cells.flatMap(d => series.map(([name, col]) => ({nL: d.nL, y: d[col], series: name, cell: d})));
+  const last = rows.filter(d => d.nL === cells[cells.length - 1]?.nL);
+  return Plot.plot({
+    width: 680, height: 380, marginLeft: 45, marginRight: 130,
+    style: {background: "transparent", color: C.ink2},
+    x: {label: "Lessons per person (n_L)", ticks: [2, 4, 8, 12, 16]},
+    y: {label: "Reliability", domain: [0, 1], grid: true},
+    color: {domain: series.map(s => s[0]), range: series.map(s => s[2]), legend: true},
+    marks: [
+      Plot.ruleY([0], {stroke: "#c3c2b7"}),
+      Plot.areaY(cells, {x: "nL", y1: "rho2pi_soft", y2: "rho2_mc_soft", fill: C.wash}),
+      Plot.lineY(rows, {x: "nL", y: "y", stroke: "series", strokeWidth: 2}),
+      Plot.dot(rows, {x: "nL", y: "y", stroke: "series", fill: "#fcfcfb", r: 4, strokeWidth: 1.5}),
+      Plot.text(last, {x: "nL", y: "y", text: d => `${fmt(d.y)}`, dx: 8, textAnchor: "start", fill: C.ink}),
+      Plot.tip(cells, Plot.pointer({x: "nL", y: "rho2_mc_soft",
+        title: d => `n_L = ${d.nL}\ncoefficient ${fmt(d.rho2_mc_soft)}\nreplication ${fmt(d.rho_rep_soft)}\nconstruct ${fmt(d.rho2pi_soft)}\nvalidity-adjusted bias ${fmt(d.rho2_mc_soft - d.rho2pi_soft)}\nλ ${fmt(d.lambda_soft)}`}))
+    ]
+  });
+}
+```
+
+---
+
+*Data: `simulation1_cells.csv` and `simulation2_cells.csv` from the chapter's simulation studies (Stata). Formulas: chapter draft, closed-form expressions for $E\rho^2$, $\lambda$, and CRR, verified against the stored closed-form values in every simulated cell.*
