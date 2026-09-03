@@ -14,7 +14,6 @@ status: "Working paper"
 :::
 
 *Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring*
-(with Vivian Wong and Amy Dray)
 
 ## Abstract
 
