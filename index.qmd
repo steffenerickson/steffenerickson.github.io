@@ -17,19 +17,16 @@ about:
       href: mailto:cns8vg@virginia.edu
 ---
 
-I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. I study new technologies in schools, asking two questions: **do they actually help students**, and **can we trust the data we use to decide?**
+I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. My dissertation focuses on new technologies in schools, asking two questions: **do they actually help students**, and **can we trust the data we use to decide?**
 
-My dissertation takes on both. One chapter evaluates a tutoring program that combines adaptive software with live virtual tutors, developing a method for extending credible causal estimates from the narrow group where they are cleanest to the full population a district actually serves. Another asks when scores produced by AI language models can be trusted to measure human behavior — using classroom observations of teachers as the test case — and provides a framework for choosing among AI scoring systems before deploying them.
+## Working Papers
 
-Though my applications are in education, both problems are general: any field adopting new technology has to estimate effects beyond where the evidence is strongest, and increasingly has to decide whether AI-generated measurements are reliable enough to act on. I build statistical software in Stata/Mata and work in R and Python.
+- [Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring](chapters/ch1/index.qmd)
+- [Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers](chapters/ch2/index.qmd)
 
-## Education
+## Published Work
 
-- **PhD, Education Policy** — University of Virginia, expected 2026
-- **MPP** — University of Virginia, 2024
-- **MS, Quantitative Methods** — University of Virginia, 2022
-- **BS, Agricultural Economics** — Virginia Tech, 2019
-
-## Interests
-
-Causal inference & program evaluation · Measurement & psychometrics · LLM-based measurement systems · Generalizability theory · Statistical software development
+- Cohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. *Educational Researcher, 53*(1), 19–35.
+- Wilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates' perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. *AERA Open, 11*, 23328584251375064.
+- Suhr, M., Erickson, S., Kelcey, B., Mclean, L., Cohen, J., & Jones, N. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. *Educational Assessment*.
+- Cohen, J., Jones, N., Wong, V. C., Quinn, A., Erickson, S., Parten, H., & Suhr, M. (in press). Practice-based, online modules for expediting teacher skill development. *Educational Evaluation and Policy Analysis*. [EdWorkingPaper No. 26-1460](https://doi.org/10.26300/vp80-mq53)

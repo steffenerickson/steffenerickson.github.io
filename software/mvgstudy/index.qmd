@@ -76,6 +76,32 @@ mvdstudy, object(p) errortype(relative) current bootstrap ci_level(95)
 
 `mvdstudy` projects generalizability and phi coefficients over hypothetical facet sample sizes — the classic "how many raters and lessons do I need?" question. `mvcrr` extends the framework to LLM-classifier scoring systems, computing the projected construct-relevant reliability criterion developed in [Chapter 2 of my dissertation](../../chapters/ch2/index.qmd).
 
+### Projecting CRR with mvcrr
+
+`mvcrr` is a post-estimation command. It reads a G-study fit to exactly three per-cell outcomes: the classifier's estimated false-positive intercept (`Ahat`), class separation (`Jhat`), and prevalence (`pihat`), each computed upstream from gold-labeled utterances. It then projects construct-relevant reliability for the facet sample sizes you plan to collect.
+
+**Persons with replicated lessons.** Fit the nested persons-with-lessons design, then project to four lessons per teacher. The `current` option projects at the observed sizes instead, and `bootstrap` carries BCa confidence intervals through from a bootstrapped G-study:
+
+```stata
+use mvcrrexampledata.dta, clear
+mvgstudy (Ahat Jhat pihat = p l|p)
+mvcrr, object(p) nfacet(l 4)
+
+mvgstudy (Ahat Jhat pihat = p l|p), bootstrap reps(1000) seed(90210)
+mvcrr, object(p) nfacet(l 4) bootstrap
+```
+
+**Two random facets.** With persons crossed by lessons and raters, give every non-object facet a D-study size. Naming a facet in `fix()` instead treats it as fixed, so its differential classifier functioning is charged against validity rather than averaged out as error:
+
+```stata
+use mvcrrexampledata_plr.dta, clear
+mvgstudy (Ahat Jhat pihat = p l r p#l p#r l#r p#l#r)
+mvcrr, object(p) nfacet(l 4 r 2)
+mvcrr, object(p) nfacet(r 2) fix(l 4)
+```
+
+The projected CRR, its zero-covariance version, λ, and the underlying reliability coefficients are returned in `r()`. Run `mata drop c` when finished.
+
 ## Syntax reference
 
 Full syntax, options, termlist-expansion rules, and validated-design tables are in the help files (`help mvgstudy`, `help mvdstudy`, `help mvcrr`) shipped with the package.

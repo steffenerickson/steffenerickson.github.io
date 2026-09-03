@@ -9,4 +9,3 @@ listing:
   categories: false
 ---
 
-New technologies — adaptive learning platforms, virtual tutoring, AI language models — are entering schools faster than the evidence about them can keep up. My dissertation builds that evidence two ways. The first chapter evaluates a tutoring program that combines adaptive software with live virtual tutors, asking whether it works and for whom — and developing a method for extending credible causal estimates from the narrow group of students where they are cleanest to the full population a district actually serves. The second chapter asks when scores produced by AI language models can be trusted to measure human behavior, using classroom observations of teachers as the test case, and provides a framework for choosing among AI scoring systems before deploying them. Together the chapters answer the two questions anyone deploying new technology must face: does it work, and can we trust the data we use to decide?
