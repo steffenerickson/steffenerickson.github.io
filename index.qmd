@@ -1,6 +1,6 @@
 ---
 title: "Steffen Erickson"
-image: images/headshot.jpg
+image: images/headshot.png
 toc: false
 about:
   template: trestles
