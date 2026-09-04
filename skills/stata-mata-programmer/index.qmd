@@ -16,12 +16,7 @@ It loads automatically when a request involves `.ado`, `.mata`, or `.sthlp` file
 
 ## Installation
 
-```bash
-git clone https://github.com/steffenerickson/claude-skills ~/tmp-skills
-cp -r ~/tmp-skills/stata-mata-programmer ~/.claude/skills/
-```
-
-Or simply save [SKILL.md](SKILL.md) to `~/.claude/skills/stata-mata-programmer/SKILL.md`.
+Save [SKILL.md](SKILL.md) to `~/.claude/skills/stata-mata-programmer/SKILL.md`. Claude Code picks it up on the next session.
 
 ## What is in it
 
@@ -29,18 +24,26 @@ Or simply save [SKILL.md](SKILL.md) to `~/.claude/skills/stata-mata-programmer/S
 
 Before writing code, Claude has to answer six questions out loud: is this a new command, a new option, or a class extension; what crosses the Stata–Mata boundary and in which direction; does the command depend on state left behind by another command; what does the caller get back in `r()` or `e()`; is memoization needed; and which files change. The last one matters most — a new option touches the `.ado`, the Mata method, and the help file, and the skill requires all three or an explicit statement of what was skipped.
 
+### Package layout
+
+One user command per `.ado` file, always. Stata autoloads a program only by the name of the command called, and it silently drops autoloaded programs under memory pressure, so a second command hiding in the first command's file works until a long bootstrap makes it vanish. The Mata class and free functions are compiled into an `.mlib` by a build do-file rather than shipped as inline source. The skill also fixes the housekeeping around this: a two-line `*!` banner in every file that names only the current version and date, with the full release history kept once in a `CHANGELOG.md` rather than repeated at the top of each file, a `.pkg` version floor that matches the `version` statement and the Stata that compiled the library, and a grep for undeclared `mm_*` calls so a stray moremata dependency does not break the package for everyone else.
+
 ### Stata conventions
 
-File layout for a package `.ado` with post-estimation commands, program anatomy, and rules for the Stata–Mata boundary: every `st_local()`, `st_matrix()`, `st_numscalar()`, and `st_data()` call, plus save-and-restore patterns for operations that mutate a persistent Mata object.
+Program anatomy for the wrapper, and rules for the Stata–Mata boundary: every `st_local()`, `st_matrix()`, `st_numscalar()`, and `st_data()` call, tempnames passed into Mata instead of hard-coded global names, labeled returned matrices, and save-and-restore patterns for operations that mutate a persistent Mata object.
 
 ### Mata conventions
 
-Class organization with an explicit public/private split, shared computation cores so variants do not drift apart, explicit type declarations, error handling, `asarray` memoization, whole-token string matching, matrix algebra and replicate bookkeeping, and the pitfalls that only appear under `stata -b do`.
+Class organization with an explicit public/private split, shared computation cores so variants do not drift apart, explicit type declarations, error handling, `asarray` memoization, whole-token string matching, matrix algebra and replicate bookkeeping, and a list of constructs that run interactively but fail under batch mode (`stata -b do`), which is how test suites and scripted installs actually execute the code.
 
 ### Help files
 
 A `.sthlp` skeleton in SMCL plus the rules that keep it honest: the syntax line, the option table, the option descriptions, and the stored results all have to agree with the `.ado` that ships beside them.
 
-### Testing and a pitfall index
+### Testing
 
-A short testing section and a quick index of the mistakes the rest of the document exists to prevent.
+Eleven steps for testing an estimation or computation command, from an interactive smoke test to a post-publish check. The core is numerical: a validation do-file where every test compares the command's output to a closed-form or hand-computed target with a stated tolerance, plus internal-consistency checks that recompute the headline statistic from the stored results and confirm the display path and the return path agree. Refactors are held to byte-identical output against a snapshot of the previous release.
+
+### Pitfall index
+
+A table of the mistakes the rest of the document exists to prevent, each paired with its fix and the section that explains it.
