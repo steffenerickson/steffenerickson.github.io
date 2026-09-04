@@ -1,6 +1,6 @@
 ---
 title: "Dissertation"
-subtitle: "Evaluating and Measuring Emerging Technology in Schools"
+subtitle: "Methods for Evaluating Emerging Technologies in Schools"
 listing:
   contents: "*/index.qmd"
   type: default

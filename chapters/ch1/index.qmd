@@ -1,6 +1,6 @@
 ---
-title: "Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data"
-description: "A within-study comparison of regression discontinuity and difference-in-differences estimates of a hybrid tutoring program — carrying a causal estimate from the eligibility cutoff to the full assigned population."
+title: "Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring"
+description: "Links regression discontinuity and difference-in-differences designs to show how treatment effects at an eligibility cutoff can be generalized to the full population a targeted program is designed to serve."
 order: 1
 categories: [causal inference, program evaluation, regression discontinuity, difference-in-differences, edtech]
 status: "Working paper"
@@ -12,8 +12,6 @@ status: "Working paper"
 ::: {.callout-note appearance="simple" icon=false}
 **Status:** {{< meta status >}} · Paper, code, and data links coming soon
 :::
-
-*Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring*
 
 ## Abstract
 
