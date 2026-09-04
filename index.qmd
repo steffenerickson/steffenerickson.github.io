@@ -9,6 +9,9 @@ about:
     - icon: github
       text: GitHub
       href: https://github.com/steffenerickson
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/steffen-erickson-bb3757225
     - icon: file-earmark-pdf
       text: CV
       href: cv.qmd
