@@ -1,0 +1,23 @@
+[
+  {
+    "listing": "/chapters/index.html",
+    "items": [
+      "/chapters/ch1/index.html",
+      "/chapters/ch2/index.html"
+    ]
+  },
+  {
+    "listing": "/skills/index.html",
+    "items": [
+      "/skills/stata-data-management/index.html",
+      "/skills/stata-mata-programmer/index.html"
+    ]
+  },
+  {
+    "listing": "/software/index.html",
+    "items": [
+      "/software/importtextfiles/index.html",
+      "/software/mvgstudy/index.html"
+    ]
+  }
+]

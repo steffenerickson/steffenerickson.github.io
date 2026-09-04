@@ -1,0 +1,12 @@
+/* Site-wide tweaks */
+
+.quarto-title-block .description {
+  font-size: 1.05rem;
+}
+
+/* Slightly tighter CV layout */
+.cv-page h2 {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.2rem;
+  margin-top: 2rem;
+}

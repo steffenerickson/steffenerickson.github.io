@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Project construct-relevant reliability (CRR) for a planned study using scores aggregated from LLM classifiers.">
+
+<title>Interactive Simulation Explorer – Steffen Erickson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-89af0c2d685ccb09a4d7d65decb66752.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Steffen Erickson</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../chapters/index.html"> 
+<span class="menu-text">Dissertation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software/index.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../skills/index.html"> 
+<span class="menu-text">Claude Skills</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/steffenerickson"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:cns8vg@virginia.edu"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#crr-projection-calculator" id="toc-crr-projection-calculator" class="nav-link active" data-scroll-target="#crr-projection-calculator">CRR projection calculator</a></li>
+  <li><a href="#what-each-lever-does" id="toc-what-each-lever-does" class="nav-link" data-scroll-target="#what-each-lever-does">What each lever does</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interactive Simulation Explorer</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">measurement</div>
+    <div class="quarto-category">psychometrics</div>
+    <div class="quarto-category">generalizability theory</div>
+    <div class="quarto-category">LLMs</div>
+    <div class="quarto-category">simulation</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Project construct-relevant reliability (CRR) for a planned study using scores aggregated from LLM classifiers.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="17" data-source-offset="-65"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 16;"><span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reliability</span>({J<span class="op">,</span> s2pi<span class="op">,</span> s2piLP<span class="op">,</span> eps2<span class="op">,</span> nL<span class="op">,</span> mupi<span class="op">,</span> saP <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> sjP <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> saLP <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> sjLP <span class="op">=</span> <span class="dv">0</span>}) {</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> st2  <span class="op">=</span> J <span class="op">*</span> J <span class="op">*</span> s2pi <span class="op">+</span> saP <span class="op">+</span> sjP <span class="op">*</span> (mupi <span class="op">*</span> mupi <span class="op">+</span> s2pi)<span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sLP2 <span class="op">=</span> saLP <span class="op">+</span> (J <span class="op">*</span> J <span class="op">+</span> sjP) <span class="op">*</span> s2piLP</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>             <span class="op">+</span> sjLP <span class="op">*</span> (mupi <span class="op">*</span> mupi <span class="op">+</span> s2pi <span class="op">+</span> s2piLP) <span class="op">+</span> eps2<span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> rho    <span class="op">=</span> st2 <span class="op">/</span> (st2 <span class="op">+</span> sLP2 <span class="op">/</span> nL)<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> lambda <span class="op">=</span> (J <span class="op">*</span> J <span class="op">*</span> s2pi) <span class="op">/</span> st2<span class="op">;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> crr    <span class="op">=</span> (J <span class="op">*</span> J <span class="op">*</span> s2pi) <span class="op">/</span> (st2 <span class="op">+</span> ((J <span class="op">*</span> J <span class="op">+</span> sjP) <span class="op">*</span> s2piLP <span class="op">+</span> eps2) <span class="op">/</span> nL)<span class="op">;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {rho<span class="op">,</span> lambda<span class="op">,</span> crr<span class="op">,</span> st2<span class="op">,</span> sLP2}<span class="op">;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">// Within-lesson realization error for a hard classifier (draft Eq. for eps-bar^2):</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">// A = 1 - sp, J = se + sp - 1, nu1^2 = se(1-se), nu0^2 = sp(1-sp)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">epsHard</span>({se<span class="op">,</span> sp<span class="op">,</span> mupi<span class="op">,</span> n}) {</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> J <span class="op">=</span> se <span class="op">+</span> sp <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> nu1 <span class="op">=</span> se <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> se)<span class="op">,</span> nu0 <span class="op">=</span> sp <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> sp)<span class="op">;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (mupi <span class="op">*</span> nu1 <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> mupi) <span class="op">*</span> nu0 <span class="op">+</span> mupi <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> mupi) <span class="op">*</span> J <span class="op">*</span> J) <span class="op">/</span> n<span class="op">;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> ({<span class="dt">blue</span><span class="op">:</span> <span class="st">"#2a78d6"</span><span class="op">,</span> <span class="dt">orange</span><span class="op">:</span> <span class="st">"#eb6834"</span><span class="op">,</span> <span class="dt">aqua</span><span class="op">:</span> <span class="st">"#1baf7a"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="st">"#e1e0d9"</span><span class="op">,</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>      <span class="dt">ink</span><span class="op">:</span> <span class="st">"#0b0b0b"</span><span class="op">,</span> <span class="dt">ink2</span><span class="op">:</span> <span class="st">"#52514e"</span><span class="op">,</span> <span class="dt">muted</span><span class="op">:</span> <span class="st">"#898781"</span><span class="op">,</span> <span class="dt">wash</span><span class="op">:</span> <span class="st">"rgba(227,73,72,0.10)"</span>})</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>fmt <span class="op">=</span> d3<span class="op">.</span><span class="fu">format</span>(<span class="st">".3f"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<section id="crr-projection-calculator" class="level2">
+<h2 class="anchored" data-anchor-id="crr-projection-calculator">CRR projection calculator</h2>
+<p>This calculator projects the reliability of teacher-level scores produced by a fixed LLM classifier for a planned number and length of lessons. It shows how conventional reliability and construct-relevant reliability (CRR) diverge under differential classifier functioning.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="47" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 46;"><span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>viewof sd_aP  <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.15</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Person DCF in intercept σ(a_p)"</span>})</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>viewof sd_jP  <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.30</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Person DCF in separation σ(j_p)"</span>})</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>viewof sd_aLP <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.15</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Lesson DCF in intercept σ(a_pl)"</span>})</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>viewof sd_jLP <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="fl">0.30</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Lesson DCF in separation σ(j_pl)"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<details>
+<summary>
+Classifier performance and sampling design
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="57" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 56;"><span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>viewof se   <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.99</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">0.855</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Sensitivity (se)"</span>})</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>viewof sp   <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.99</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">0.743</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Specificity (sp)"</span>})</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>viewof mupi <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.02</span><span class="op">,</span> <span class="fl">0.5</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">0.10</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.005</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Mean prevalence μπ"</span>})</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>viewof sdpi   <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.01</span><span class="op">,</span> <span class="fl">0.20</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">0.048</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.001</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"SD of person prevalence σπ"</span>})</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>viewof sdpiLP <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.01</span><span class="op">,</span> <span class="fl">0.25</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">0.052</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.001</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"SD of lesson prevalence σπ,L:P"</span>})</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>viewof nseg <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">400</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">81</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Segments per lesson n"</span>})</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>viewof nLsel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">20</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Lessons per person n_L"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+</details>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="70" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 69;"><span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>calc <span class="op">=</span> {</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> J <span class="op">=</span> se <span class="op">+</span> sp <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> base <span class="op">=</span> {J<span class="op">,</span> mupi<span class="op">,</span> <span class="dt">s2pi</span><span class="op">:</span> sdpi <span class="op">**</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">s2piLP</span><span class="op">:</span> sdpiLP <span class="op">**</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="dt">eps2</span><span class="op">:</span> <span class="fu">epsHard</span>({se<span class="op">,</span> sp<span class="op">,</span> mupi<span class="op">,</span> <span class="dt">n</span><span class="op">:</span> nseg})<span class="op">,</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="dt">saP</span><span class="op">:</span> sd_aP <span class="op">**</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">sjP</span><span class="op">:</span> sd_jP <span class="op">**</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">saLP</span><span class="op">:</span> sd_aLP <span class="op">**</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">sjLP</span><span class="op">:</span> sd_jLP <span class="op">**</span> <span class="dv">2</span>}<span class="op">;</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {<span class="op">...</span><span class="fu">reliability</span>({<span class="op">...</span>base<span class="op">,</span> <span class="dt">nL</span><span class="op">:</span> nLsel})<span class="op">,</span> base}<span class="op">;</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div style="display:flex;gap:12px;flex-wrap:wrap;margin:0.75rem 0;"&gt;</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>[[<span class="st">"Projected reliability  Eρ²"</span><span class="op">,</span> calc<span class="op">.</span><span class="at">rho</span>]<span class="op">,</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>     [<span class="st">"Prevalence share  λ"</span><span class="op">,</span> calc<span class="op">.</span><span class="at">lambda</span>]<span class="op">,</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>     [<span class="st">"Construct-relevant reliability  CRR"</span><span class="op">,</span> calc<span class="op">.</span><span class="at">crr</span>]]<span class="op">.</span><span class="fu">map</span>(([t<span class="op">,</span> v]) <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="flex:1;min-width:170px;border:1px solid rgba(11,11,11,0.10);border-radius:8px;padding:12px 16px;background:#fcfcfb;"&gt;</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:0.8rem;color:</span><span class="sc">${</span>C<span class="op">.</span><span class="at">ink2</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>t<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:1.9rem;font-weight:600;color:</span><span class="sc">${</span>C<span class="op">.</span><span class="at">ink</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span><span class="fu">fmt</span>(v)<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;`</span>)<span class="sc">}</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="91" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 90;"><span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> rows <span class="op">=</span> d3<span class="op">.</span><span class="fu">range</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">21</span>)<span class="op">.</span><span class="fu">flatMap</span>(nL <span class="kw">=&gt;</span> {</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> r <span class="op">=</span> <span class="fu">reliability</span>({<span class="op">...</span>calc<span class="op">.</span><span class="at">base</span><span class="op">,</span> nL})<span class="op">;</span></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [{nL<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> r<span class="op">.</span><span class="at">rho</span><span class="op">,</span> <span class="dt">series</span><span class="op">:</span> <span class="st">"Eρ² (coefficient)"</span>}<span class="op">,</span></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>            {nL<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> r<span class="op">.</span><span class="at">crr</span><span class="op">,</span> <span class="dt">series</span><span class="op">:</span> <span class="st">"CRR (construct-relevant)"</span>}]<span class="op">;</span></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">680</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">340</span><span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">45</span><span class="op">,</span></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> {<span class="dt">background</span><span class="op">:</span> <span class="st">"transparent"</span><span class="op">,</span> <span class="dt">color</span><span class="op">:</span> C<span class="op">.</span><span class="at">ink2</span>}<span class="op">,</span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Lessons per person (n_L)"</span><span class="op">,</span> <span class="dt">ticks</span><span class="op">:</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">12</span><span class="op">,</span> <span class="dv">16</span><span class="op">,</span> <span class="dv">20</span>]}<span class="op">,</span></span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Reliability"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>    <span class="dt">color</span><span class="op">:</span> {<span class="dt">domain</span><span class="op">:</span> [<span class="st">"Eρ² (coefficient)"</span><span class="op">,</span> <span class="st">"CRR (construct-relevant)"</span>]<span class="op">,</span></span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>            <span class="dt">range</span><span class="op">:</span> [C<span class="op">.</span><span class="at">blue</span><span class="op">,</span> C<span class="op">.</span><span class="at">orange</span>]<span class="op">,</span> <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"#c3c2b7"</span>})<span class="op">,</span></span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">lineY</span>(rows<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"nL"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"series"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="dv">2</span>})<span class="op">,</span></span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>(rows<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">nL</span> <span class="op">===</span> <span class="dv">20</span>)<span class="op">,</span></span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"nL"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="fu">fmt</span>(d<span class="op">.</span><span class="at">y</span>)<span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">textAnchor</span><span class="op">:</span> <span class="st">"start"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> C<span class="op">.</span><span class="at">ink</span>})<span class="op">,</span></span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">tip</span>(rows<span class="op">,</span> Plot<span class="op">.</span><span class="fu">pointer</span>({<span class="dt">x</span><span class="op">:</span> <span class="st">"nL"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span></span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>        <span class="dt">title</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span>d<span class="op">.</span><span class="at">series</span><span class="sc">}\n</span><span class="vs">n_L = </span><span class="sc">${</span>d<span class="op">.</span><span class="at">nL</span><span class="sc">}\n${</span><span class="fu">fmt</span>(d<span class="op">.</span><span class="at">y</span>)<span class="sc">}</span><span class="vs">`</span>}))</span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-ojs-cell-5" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ojs-cell-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-5" data-nodetype="expression">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ojs-cell-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Projected reliability and CRR as lessons are added, under the settings above. The gap between the two curves is variance the coefficient certifies that is classifier artifact rather than the practice.
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="what-each-lever-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-each-lever-does">What each lever does</h2>
+<p>Each lever above changes one ingredient of the projected reliability of teacher-level scores aggregated from an LLM classifier.</p>
+<ul>
+<li><strong>Person DCF in intercept</strong> <span class="math inline">\(\sigma(a_p)\)</span>: how much the classifier’s false-positive rate varies systematically from teacher to teacher, adding reproducible error that looks like a real difference in practice.</li>
+<li><strong>Person DCF in separation</strong> <span class="math inline">\(\sigma(j_p)\)</span>: how much the classifier’s ability to distinguish the practice from everything else varies from teacher to teacher, scaling some teachers’ scores up or down across all their lessons.</li>
+<li><strong>Lesson DCF in intercept</strong> <span class="math inline">\(\sigma(a_{pl})\)</span>: how much the false-positive rate drifts from lesson to lesson within a teacher, adding error that averages out as more lessons are sampled.</li>
+<li><strong>Lesson DCF in separation</strong> <span class="math inline">\(\sigma(j_{pl})\)</span>: how much the classifier’s discriminating power drifts from lesson to lesson within a teacher, also averaging out with more lessons.</li>
+<li><strong>Sensitivity</strong> <span class="math inline">\(se\)</span>: the share of true instances of the practice the classifier correctly flags.</li>
+<li><strong>Specificity</strong> <span class="math inline">\(sp\)</span>: the share of non-instances the classifier correctly leaves unflagged.</li>
+<li><strong>Mean prevalence</strong> <span class="math inline">\(\mu_\pi\)</span>: how often the practice occurs on average across teachers, which sets the base rate the classifier is working against.</li>
+<li><strong>SD of person prevalence</strong> <span class="math inline">\(\sigma_\pi\)</span>: how much teachers truly differ from one another in how often they use the practice, the signal the score is meant to capture.</li>
+<li><strong>SD of lesson prevalence</strong> <span class="math inline">\(\sigma_{\pi,L:P}\)</span>: how much a teacher’s use of the practice varies from lesson to lesson, the occasion noise that more lessons average away.</li>
+<li><strong>Segments per lesson</strong> <span class="math inline">\(n\)</span>: how many transcript segments the classifier scores in each lesson, which governs the within-lesson realization error.</li>
+<li><strong>Lessons per person</strong> <span class="math inline">\(n_L\)</span>: how many lessons are scored for each teacher, which governs how much lesson-level error is averaged out.</li>
+</ul>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuLy8gQ2hhcHRlciBmb3JtdWxhcyAocmVkcmFmdCB2NywgRXFzLiBmb3IgRS1yaG9eMiwgbGFtYmRhLCBDUlIpXG5mdW5jdGlvbiByZWxpYWJpbGl0eSh7SiwgczJwaSwgczJwaUxQLCBlcHMyLCBuTCwgbXVwaSwgc2FQID0gMCwgc2pQID0gMCwgc2FMUCA9IDAsIHNqTFAgPSAwfSkge1xuICBjb25zdCBzdDIgID0gSiAqIEogKiBzMnBpICsgc2FQICsgc2pQICogKG11cGkgKiBtdXBpICsgczJwaSk7XG4gIGNvbnN0IHNMUDIgPSBzYUxQICsgKEogKiBKICsgc2pQKSAqIHMycGlMUFxuICAgICAgICAgICAgICsgc2pMUCAqIChtdXBpICogbXVwaSArIHMycGkgKyBzMnBpTFApICsgZXBzMjtcbiAgY29uc3QgcmhvICAgID0gc3QyIC8gKHN0MiArIHNMUDIgLyBuTCk7XG4gIGNvbnN0IGxhbWJkYSA9IChKICogSiAqIHMycGkpIC8gc3QyO1xuICBjb25zdCBjcnIgICAgPSAoSiAqIEogKiBzMnBpKSAvIChzdDIgKyAoKEogKiBKICsgc2pQKSAqIHMycGlMUCArIGVwczIpIC8gbkwpO1xuICByZXR1cm4ge3JobywgbGFtYmRhLCBjcnIsIHN0Miwgc0xQMn07XG59XG5cbi8vIFdpdGhpbi1sZXNzb24gcmVhbGl6YXRpb24gZXJyb3IgZm9yIGEgaGFyZCBjbGFzc2lmaWVyIChkcmFmdCBFcS4gZm9yIGVwcy1iYXJeMik6XG4vLyBBID0gMSAtIHNwLCBKID0gc2UgKyBzcCAtIDEsIG51MV4yID0gc2UoMS1zZSksIG51MF4yID0gc3AoMS1zcClcbmZ1bmN0aW9uIGVwc0hhcmQoe3NlLCBzcCwgbXVwaSwgbn0pIHtcbiAgY29uc3QgSiA9IHNlICsgc3AgLSAxO1xuICBjb25zdCBudTEgPSBzZSAqICgxIC0gc2UpLCBudTAgPSBzcCAqICgxIC0gc3ApO1xuICByZXR1cm4gKG11cGkgKiBudTEgKyAoMSAtIG11cGkpICogbnUwICsgbXVwaSAqICgxIC0gbXVwaSkgKiBKICogSikgLyBuO1xufVxuXG5DID0gKHtibHVlOiBcIiMyYTc4ZDZcIiwgb3JhbmdlOiBcIiNlYjY4MzRcIiwgYXF1YTogXCIjMWJhZjdhXCIsIGdyaWQ6IFwiI2UxZTBkOVwiLFxuICAgICAgaW5rOiBcIiMwYjBiMGJcIiwgaW5rMjogXCIjNTI1MTRlXCIsIG11dGVkOiBcIiM4OTg3ODFcIiwgd2FzaDogXCJyZ2JhKDIyNyw3Myw3MiwwLjEwKVwifSlcblxuZm10ID0gZDMuZm9ybWF0KFwiLjNmXCIpXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2Ygc2RfYVAgID0gSW5wdXRzLnJhbmdlKFswLCAwLjE1XSwge3ZhbHVlOiAwLCBzdGVwOiAwLjAwNSwgbGFiZWw6IFwiUGVyc29uIERDRiBpbiBpbnRlcmNlcHQgz4MoYV9wKVwifSlcbnZpZXdvZiBzZF9qUCAgPSBJbnB1dHMucmFuZ2UoWzAsIDAuMzBdLCB7dmFsdWU6IDAsIHN0ZXA6IDAuMDA1LCBsYWJlbDogXCJQZXJzb24gRENGIGluIHNlcGFyYXRpb24gz4Moal9wKVwifSlcbnZpZXdvZiBzZF9hTFAgPSBJbnB1dHMucmFuZ2UoWzAsIDAuMTVdLCB7dmFsdWU6IDAsIHN0ZXA6IDAuMDA1LCBsYWJlbDogXCJMZXNzb24gRENGIGluIGludGVyY2VwdCDPgyhhX3BsKVwifSlcbnZpZXdvZiBzZF9qTFAgPSBJbnB1dHMucmFuZ2UoWzAsIDAuMzBdLCB7dmFsdWU6IDAsIHN0ZXA6IDAuMDA1LCBsYWJlbDogXCJMZXNzb24gRENGIGluIHNlcGFyYXRpb24gz4Moal9wbClcIn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2Ygc2UgICA9IElucHV0cy5yYW5nZShbMC41LCAwLjk5XSwge3ZhbHVlOiAwLjg1NSwgc3RlcDogMC4wMDUsIGxhYmVsOiBcIlNlbnNpdGl2aXR5IChzZSlcIn0pXG52aWV3b2Ygc3AgICA9IElucHV0cy5yYW5nZShbMC41LCAwLjk5XSwge3ZhbHVlOiAwLjc0Mywgc3RlcDogMC4wMDUsIGxhYmVsOiBcIlNwZWNpZmljaXR5IChzcClcIn0pXG52aWV3b2YgbXVwaSA9IElucHV0cy5yYW5nZShbMC4wMiwgMC41XSwge3ZhbHVlOiAwLjEwLCBzdGVwOiAwLjAwNSwgbGFiZWw6IFwiTWVhbiBwcmV2YWxlbmNlIM68z4BcIn0pXG52aWV3b2Ygc2RwaSAgID0gSW5wdXRzLnJhbmdlKFswLjAxLCAwLjIwXSwge3ZhbHVlOiAwLjA0OCwgc3RlcDogMC4wMDEsIGxhYmVsOiBcIlNEIG9mIHBlcnNvbiBwcmV2YWxlbmNlIM+Dz4BcIn0pXG52aWV3b2Ygc2RwaUxQID0gSW5wdXRzLnJhbmdlKFswLjAxLCAwLjI1XSwge3ZhbHVlOiAwLjA1Miwgc3RlcDogMC4wMDEsIGxhYmVsOiBcIlNEIG9mIGxlc3NvbiBwcmV2YWxlbmNlIM+Dz4AsTDpQXCJ9KVxudmlld29mIG5zZWcgPSBJbnB1dHMucmFuZ2UoWzEwLCA0MDBdLCB7dmFsdWU6IDgxLCBzdGVwOiAxLCBsYWJlbDogXCJTZWdtZW50cyBwZXIgbGVzc29uIG5cIn0pXG52aWV3b2YgbkxzZWwgPSBJbnB1dHMucmFuZ2UoWzEsIDIwXSwge3ZhbHVlOiAxMiwgc3RlcDogMSwgbGFiZWw6IFwiTGVzc29ucyBwZXIgcGVyc29uIG5fTFwifSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImNhbGMgPSB7XG4gIGNvbnN0IEogPSBzZSArIHNwIC0gMTtcbiAgY29uc3QgYmFzZSA9IHtKLCBtdXBpLCBzMnBpOiBzZHBpICoqIDIsIHMycGlMUDogc2RwaUxQICoqIDIsXG4gICAgZXBzMjogZXBzSGFyZCh7c2UsIHNwLCBtdXBpLCBuOiBuc2VnfSksXG4gICAgc2FQOiBzZF9hUCAqKiAyLCBzalA6IHNkX2pQICoqIDIsIHNhTFA6IHNkX2FMUCAqKiAyLCBzakxQOiBzZF9qTFAgKiogMn07XG4gIHJldHVybiB7Li4ucmVsaWFiaWxpdHkoey4uLmJhc2UsIG5MOiBuTHNlbH0pLCBiYXNlfTtcbn1cblxuaHRtbGA8ZGl2IHN0eWxlPVwiZGlzcGxheTpmbGV4O2dhcDoxMnB4O2ZsZXgtd3JhcDp3cmFwO21hcmdpbjowLjc1cmVtIDA7XCI+XG4gICR7W1tcIlByb2plY3RlZCByZWxpYWJpbGl0eSAgRc+BwrJcIiwgY2FsYy5yaG9dLFxuICAgICBbXCJQcmV2YWxlbmNlIHNoYXJlICDOu1wiLCBjYWxjLmxhbWJkYV0sXG4gICAgIFtcIkNvbnN0cnVjdC1yZWxldmFudCByZWxpYWJpbGl0eSAgQ1JSXCIsIGNhbGMuY3JyXV0ubWFwKChbdCwgdl0pID0+IGh0bWxgXG4gIDxkaXYgc3R5bGU9XCJmbGV4OjE7bWluLXdpZHRoOjE3MHB4O2JvcmRlcjoxcHggc29saWQgcmdiYSgxMSwxMSwxMSwwLjEwKTtib3JkZXItcmFkaXVzOjhweDtwYWRkaW5nOjEycHggMTZweDtiYWNrZ3JvdW5kOiNmY2ZjZmI7XCI+XG4gICAgPGRpdiBzdHlsZT1cImZvbnQtc2l6ZTowLjhyZW07Y29sb3I6JHtDLmluazJ9O1wiPiR7dH08L2Rpdj5cbiAgICA8ZGl2IHN0eWxlPVwiZm9udC1zaXplOjEuOXJlbTtmb250LXdlaWdodDo2MDA7Y29sb3I6JHtDLmlua307XCI+JHtmbXQodil9PC9kaXY+XG4gIDwvZGl2PmApfVxuPC9kaXY+YFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICBjb25zdCByb3dzID0gZDMucmFuZ2UoMSwgMjEpLmZsYXRNYXAobkwgPT4ge1xuICAgIGNvbnN0IHIgPSByZWxpYWJpbGl0eSh7Li4uY2FsYy5iYXNlLCBuTH0pO1xuICAgIHJldHVybiBbe25MLCB5OiByLnJobywgc2VyaWVzOiBcIkXPgcKyIChjb2VmZmljaWVudClcIn0sXG4gICAgICAgICAgICB7bkwsIHk6IHIuY3JyLCBzZXJpZXM6IFwiQ1JSIChjb25zdHJ1Y3QtcmVsZXZhbnQpXCJ9XTtcbiAgfSk7XG4gIHJldHVybiBQbG90LnBsb3Qoe1xuICAgIHdpZHRoOiA2ODAsIGhlaWdodDogMzQwLCBtYXJnaW5MZWZ0OiA0NSxcbiAgICBzdHlsZToge2JhY2tncm91bmQ6IFwidHJhbnNwYXJlbnRcIiwgY29sb3I6IEMuaW5rMn0sXG4gICAgeDoge2xhYmVsOiBcIkxlc3NvbnMgcGVyIHBlcnNvbiAobl9MKVwiLCB0aWNrczogWzEsIDQsIDgsIDEyLCAxNiwgMjBdfSxcbiAgICB5OiB7bGFiZWw6IFwiUmVsaWFiaWxpdHlcIiwgZG9tYWluOiBbMCwgMV0sIGdyaWQ6IHRydWV9LFxuICAgIGNvbG9yOiB7ZG9tYWluOiBbXCJFz4HCsiAoY29lZmZpY2llbnQpXCIsIFwiQ1JSIChjb25zdHJ1Y3QtcmVsZXZhbnQpXCJdLFxuICAgICAgICAgICAgcmFuZ2U6IFtDLmJsdWUsIEMub3JhbmdlXSwgbGVnZW5kOiB0cnVlfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5ydWxlWShbMF0sIHtzdHJva2U6IFwiI2MzYzJiN1wifSksXG4gICAgICBQbG90LmxpbmVZKHJvd3MsIHt4OiBcIm5MXCIsIHk6IFwieVwiLCBzdHJva2U6IFwic2VyaWVzXCIsIHN0cm9rZVdpZHRoOiAyfSksXG4gICAgICBQbG90LnRleHQocm93cy5maWx0ZXIoZCA9PiBkLm5MID09PSAyMCksXG4gICAgICAgIHt4OiBcIm5MXCIsIHk6IFwieVwiLCB0ZXh0OiBkID0+IGZtdChkLnkpLCBkeDogOCwgdGV4dEFuY2hvcjogXCJzdGFydFwiLCBmaWxsOiBDLmlua30pLFxuICAgICAgUGxvdC50aXAocm93cywgUGxvdC5wb2ludGVyKHt4OiBcIm5MXCIsIHk6IFwieVwiLFxuICAgICAgICB0aXRsZTogZCA9PiBgJHtkLnNlcmllc31cXG5uX0wgPSAke2Qubkx9XFxuJHtmbXQoZC55KX1gfSkpXG4gICAgXVxuICB9KTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2RfYVAnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2RfalAnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2RfYUxQJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3NkX2pMUCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdzZScpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdzcCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdtdXBpJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3NkcGknKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2RwaUxQJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ25zZWcnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbkxzZWwnKSJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../chapters/ch2";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "../..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/steffenerickson\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Steffen Erickson</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

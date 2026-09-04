@@ -1,0 +1,317 @@
+[
+  {
+    "objectID": "software/mvgstudy/index.html",
+    "href": "software/mvgstudy/index.html",
+    "title": "mvgstudy",
+    "section": "",
+    "text": "Version 1.3.3 · GitHub · Issues"
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#what-it-does",
+    "href": "software/mvgstudy/index.html#what-it-does",
+    "title": "mvgstudy",
+    "section": "What it does",
+    "text": "What it does\nmvgstudy estimates variance and covariance components for multifaceted generalizability (G-study) designs, following Brennan (2001). It supports any combination of crossed and nested facets, univariate and multivariate outcomes, balanced and unbalanced designs, and data with missing outcome values. For balanced designs it uses the SSCP-based method-of-moments estimator derived from a MANOVA decomposition; for unbalanced designs it automatically switches to the exact CP-terms estimator (Brennan, 2001, Sec. 11.1.3), solving the linear system directly with no harmonic-mean approximation.\nExisting Stata options for G-theory stop at univariate, balanced designs and point estimates. mvgstudy adds three things researchers routinely need: multivariate designs (full covariance component matrices for each effect, not just variances), exact handling of unbalanced data (unequal cell sizes and missing observations, detected and handled automatically), and statistical inference — bootstrap standard errors and bias-corrected accelerated (BCa) confidence intervals via cluster-level resampling of any facet or combination of facets, following the Li et al. (2023) taxonomy of bootstrap units.\nThe package ships as a suite of three commands:\n\n\n\n\n\n\n\nCommand\nPurpose\n\n\n\n\nmvgstudy\nG-study: variance and covariance component estimation, with optional bootstrap\n\n\nmvdstudy\nD-study: projects reliability coefficients (Eρ², Φ) and error/true-score variances over proposed facet sample sizes, with bootstrap CIs propagated from the G-study\n\n\nmvcrr\nProjected construct-relevant reliability (CRR) for LLM-classifier measurement designs, with optional bootstrap BCa CIs"
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#installation",
+    "href": "software/mvgstudy/index.html#installation",
+    "title": "mvgstudy",
+    "section": "Installation",
+    "text": "Installation\nFrom GitHub:\nnet install mvgstudy, from(\"https://raw.githubusercontent.com/steffenerickson/mvgstudy/main/\") replace\nRequirements: Stata 16 or later. No dependencies outside official Stata."
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#quick-start",
+    "href": "software/mvgstudy/index.html#quick-start",
+    "title": "mvgstudy",
+    "section": "Quick start",
+    "text": "Quick start\nA fully-crossed persons × items × raters design with two outcomes:\nuse mvgstudyexampledata.dta, clear\nmvgstudy (x1 x2 = p i h p#i p#h i#h p#i#h)\nFor fully-crossed or purely-nested designs, only the residual term is needed — the full termlist is expanded automatically:\nmvgstudy (x1 x2 = p#i#h)     // expands to p i h p#i p#h i#h p#i#h\nmvgstudy (x1 = p|i|h)        // expands to h i|h p|i|h"
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#main-features",
+    "href": "software/mvgstudy/index.html#main-features",
+    "title": "mvgstudy",
+    "section": "Main features",
+    "text": "Main features\n\nMultivariate covariance components\nWhen the outcome list contains multiple variables, each effect gets a full covariance component (EMCP) matrix rather than a scalar variance, supporting multivariate G-theory analyses such as composite reliability and profile dependability.\n\n\nUnbalanced designs, handled exactly\nUnequal cell sizes are detected automatically and estimated with the exact CP-terms method — unbiased and consistent, with a documented fallback (and warning) to the harmonic-mean approximation only when the coefficient matrix is rank-deficient. Eight canonical designs (p×i, i:p, p×i×h, p×(i:h), (i:p)×h, i:(p×h), (i×h):p, i:h:p) are validated against hand calculations under both balance and random missingness.\n\n\nBootstrap inference\nThe bootstrap option adds standard errors and BCa confidence intervals for every component via cluster-level resampling. The resampling unit is any facet or set of facets (bootunit(p), bootunit(p i), …), with within-parent-group resampling for nested facets. The stored bootstrap distribution propagates automatically to mvdstudy, so D-study reliability projections carry confidence intervals too:\nmvgstudy (x1 x2 = p i h p#i p#h i#h p#i#h), bootstrap reps(1000) seed(42)\nmvdstudy, object(p) errortype(relative) current bootstrap ci_level(95)\n\n\nDecision studies and LLM measurement designs\nmvdstudy projects generalizability and phi coefficients over hypothetical facet sample sizes — the classic “how many raters and lessons do I need?” question. mvcrr extends the framework to LLM-classifier scoring systems, computing the projected construct-relevant reliability criterion developed in Chapter 2 of my dissertation.\n\n\nProjecting CRR with mvcrr\nmvcrr is a post-estimation command. It reads a G-study fit to exactly three per-cell outcomes: the classifier’s estimated false-positive intercept (Ahat), class separation (Jhat), and prevalence (pihat), each computed upstream from gold-labeled utterances. It then projects construct-relevant reliability for the facet sample sizes you plan to collect.\nPersons with replicated lessons. Fit the nested persons-with-lessons design, then project to four lessons per teacher. The current option projects at the observed sizes instead, and bootstrap carries BCa confidence intervals through from a bootstrapped G-study:\nuse mvcrrexampledata.dta, clear\nmvgstudy (Ahat Jhat pihat = p l|p)\nmvcrr, object(p) nfacet(l 4)\n\nmvgstudy (Ahat Jhat pihat = p l|p), bootstrap reps(1000) seed(90210)\nmvcrr, object(p) nfacet(l 4) bootstrap\nTwo random facets. With persons crossed by lessons and raters, give every non-object facet a D-study size. Naming a facet in fix() instead treats it as fixed, so its differential classifier functioning is charged against validity rather than averaged out as error:\nuse mvcrrexampledata_plr.dta, clear\nmvgstudy (Ahat Jhat pihat = p l r p#l p#r l#r p#l#r)\nmvcrr, object(p) nfacet(l 4 r 2)\nmvcrr, object(p) nfacet(r 2) fix(l 4)\nThe projected CRR, its zero-covariance version, λ, and the underlying reliability coefficients are returned in r(). Run mata drop c when finished."
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#syntax-reference",
+    "href": "software/mvgstudy/index.html#syntax-reference",
+    "title": "mvgstudy",
+    "section": "Syntax reference",
+    "text": "Syntax reference\nFull syntax, options, termlist-expansion rules, and validated-design tables are in the help files (help mvgstudy, help mvdstudy, help mvcrr) shipped with the package."
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#citation",
+    "href": "software/mvgstudy/index.html#citation",
+    "title": "mvgstudy",
+    "section": "Citation",
+    "text": "Citation\n@software{erickson2026mvgstudy,\n  author  = {Erickson, Steffen},\n  title   = {mvgstudy: Stata commands for multivariate generalizability and decision studies},\n  version = {1.3.3},\n  year    = {2026},\n  url     = {https://github.com/steffenerickson/mvgstudy}\n}\nA companion paper is in preparation for the Stata Journal."
+  },
+  {
+    "objectID": "software/mvgstudy/index.html#references",
+    "href": "software/mvgstudy/index.html#references",
+    "title": "mvgstudy",
+    "section": "References",
+    "text": "References\n\nBrennan, R. L. (2001). Generalizability theory. Springer.\nEfron, B., & Tibshirani, R. J. (1993). An introduction to the bootstrap. Chapman & Hall.\nLi, G., Michaelides, M. P., & Haertel, E. (2023). Bootstrap confidence intervals for generalizability theory variance components. PLOS ONE, 18(7), e0288069."
+  },
+  {
+    "objectID": "software/importtextfiles/index.html",
+    "href": "software/importtextfiles/index.html",
+    "title": "importtextfiles",
+    "section": "",
+    "text": "Version 1.0.0 · GitHub · Issues"
+  },
+  {
+    "objectID": "software/importtextfiles/index.html#what-it-does",
+    "href": "software/importtextfiles/index.html#what-it-does",
+    "title": "importtextfiles",
+    "section": "What it does",
+    "text": "What it does\nimporttextfiles reads every file in a directory matching a file pattern, sorted by name, and stores each file as one observation with two strL variables: the file name and the complete file contents. It is built for corpora of documents — transcripts, notes, model outputs — that need to sit alongside structured data in Stata."
+  },
+  {
+    "objectID": "software/importtextfiles/index.html#installation",
+    "href": "software/importtextfiles/index.html#installation",
+    "title": "importtextfiles",
+    "section": "Installation",
+    "text": "Installation\nFrom GitHub:\nnet install importtextfiles, from(\"https://raw.githubusercontent.com/steffenerickson/importtextfiles/main/\") replace\nRequirements: Stata 17 or later. No dependencies outside official Stata."
+  },
+  {
+    "objectID": "software/importtextfiles/index.html#quick-start",
+    "href": "software/importtextfiles/index.html#quick-start",
+    "title": "importtextfiles",
+    "section": "Quick start",
+    "text": "Quick start\nRead a folder of .txt transcripts into memory, normalizing line endings:\nimporttextfiles using \"raw/2023-24 Transcripts\", clear normalize\nLoad a second corpus into its own frame without touching the current data, or read Markdown notes as single-line cells:\nimporttextfiles using \"raw/2024-25 Transcripts\", frame(t2) normalize\nimporttextfiles using \"notes\", pattern(*.md) separator(\" \") clear"
+  },
+  {
+    "objectID": "software/importtextfiles/index.html#syntax-reference",
+    "href": "software/importtextfiles/index.html#syntax-reference",
+    "title": "importtextfiles",
+    "section": "Syntax reference",
+    "text": "Syntax reference\nFull syntax and options are in the help file (help importtextfiles) shipped with the package."
+  },
+  {
+    "objectID": "software/importtextfiles/index.html#citation",
+    "href": "software/importtextfiles/index.html#citation",
+    "title": "importtextfiles",
+    "section": "Citation",
+    "text": "Citation\n@software{erickson2026importtextfiles,\n  author  = {Erickson, Steffen},\n  title   = {importtextfiles: Stata command to read a directory of text files into strL variables},\n  version = {1.0.0},\n  year    = {2026},\n  url     = {https://github.com/steffenerickson/importtextfiles}\n}"
+  },
+  {
+    "objectID": "skills/stata-data-management/index.html",
+    "href": "skills/stata-data-management/index.html",
+    "title": "stata-data-management",
+    "section": "",
+    "text": "Skill file · SKILL.md"
+  },
+  {
+    "objectID": "skills/stata-data-management/index.html#what-it-does",
+    "href": "skills/stata-data-management/index.html#what-it-does",
+    "title": "stata-data-management",
+    "section": "What it does",
+    "text": "What it does\nThis skill teaches Claude how I write the do-files that sit between raw files and the first estimation command: import, harmonize, merge, deduplicate, reshape, and save. The goal is a cleaning file that runs from a clean session on any machine, checks its own assumptions with assert rather than leaving them to be eyeballed, and lets a reader trace every variable in the output back to its source and rule. Without it, Claude writes cleaning code that works on the file in front of it but drops rows silently, encodes categories alphabetically, and leaves diagnostic tab calls scattered through shipped code.\nIt loads automatically when a request involves cleaning a CSV, building an analytic file, merging or reshaping datasets, or reviewing a data-prep do-file. Programs, Mata, and help files are covered by the companion skill, stata-mata-programmer."
+  },
+  {
+    "objectID": "skills/stata-data-management/index.html#installation",
+    "href": "skills/stata-data-management/index.html#installation",
+    "title": "stata-data-management",
+    "section": "Installation",
+    "text": "Installation\nSave SKILL.md to ~/.claude/skills/stata-data-management/SKILL.md. Claude Code picks it up on the next session."
+  },
+  {
+    "objectID": "skills/stata-data-management/index.html#what-is-in-it",
+    "href": "skills/stata-data-management/index.html#what-is-in-it",
+    "title": "stata-data-management",
+    "section": "What is in it",
+    "text": "What is in it\n\nA required first pass\nBefore writing code, Claude has to answer five questions: is this a new project, a new do-file, or an edit to an existing one; what is the unit of observation of every input and of the output; which rows are allowed to disappear and why; what must be true of the output; and which files change. The answers become the file’s key checks, its comments, and its end-of-file contract.\n\n\nProject structure, applied only when asked\nA numbered folder layout with a single config file for paths, a run-all file, and a separate file for value labels. The skill imposes this only for a project started from scratch or on request. When editing an existing file, Claude works inside the current layout and, if the project would clearly benefit from the structure, says so once in a sentence at the end.\nThe separate labels file exists for a specific reason. Loading data with use, import, clear, or restore discards the value labels in memory, so a label defined at the top of a do-file is gone by the time encode runs, and encode silently falls back to alphabetical codes. The skill requires the labels file to be run again immediately before any encode.\n\n\nCleaning conventions\nOne section each for the anatomy of a cleaning do-file, importing, frames and append, keys and duplicates, merges, strings and dates, indicators and encoding, reshape, and derived variables. The rules that recur throughout:\n\nImport every column as a string and destring deliberately, so types agree across files before they are appended.\nDeclare a key for every dataset and check it with isid at every stage boundary.\nChoose among duplicate rows with an explicit, ordered, commented bysort rule, never with egen tag.\nEvery merge names its flag, states in a comment what match pattern it expects, and asserts it.\nAfter merging a participation file, missing means absent from that file, not zero.\nBuild indicators against a known value set with inlist() and leave everything else missing.\nPin encode codes with a predefined label so the same category gets the same code in every file.\nAttach labels at the line that creates the variable, not in a block at the end.\n\n\n\nThe output contract\nEvery cleaning file ends with the same block before save: an isid on the declared key, range asserts on the important variables, a row count, compress, a dataset label and characteristics recording which do-file built it, and a datasignature so downstream files can confirm their input has not changed.\n\n\nReview checklist\nFor “review my cleaning code” requests, findings are reported in order of consequence: silent data loss first, then fragile codings, unchecked keys, repetition, reproducibility, and hygiene. When the request is a rewrite, the old output file is the test oracle. Claude merges the new output against the old on the declared key and reports rows only in the old file, rows only in the new one, and rows where values differ, each with a cause.\n\n\nPitfall index\nA table of the mistakes the rest of the document exists to prevent, each paired with its fix and the section that explains it."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Steffen Erickson",
+    "section": "",
+    "text": "I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. My research uses and develops methods in causal inference and measurement science to evaluate emerging technologies in education. I focus on two questions: Do these technologies improve student learning, and can we trust the measures used to evaluate them?"
+  },
+  {
+    "objectID": "index.html#working-papers",
+    "href": "index.html#working-papers",
+    "title": "Steffen Erickson",
+    "section": "Working Papers",
+    "text": "Working Papers\n\nGeneralizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring\nReliable Measurement of Teachers’ Instructional Practices with LLM Classifiers"
+  },
+  {
+    "objectID": "index.html#published-work",
+    "href": "index.html#published-work",
+    "title": "Steffen Erickson",
+    "section": "Published Work",
+    "text": "Published Work\n\nCohen, J., Jones, N., Wong, V. C., Quinn, A., Erickson, S., Parten, H., & Suhr, M. (in press). Practice-based, online modules for expediting teacher skill development. Educational Evaluation and Policy Analysis. EdWorkingPaper No. 26-1460\nCohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. Educational Researcher, 53(1), 19–35.\nSuhr, M., Erickson, S., Kelcey, B., Mclean, L., Cohen, J., & Jones, N. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Educational Assessment.\nWilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates’ perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. AERA Open, 11, 23328584251375064."
+  },
+  {
+    "objectID": "chapters/index.html",
+    "href": "chapters/index.html",
+    "title": "Dissertation",
+    "section": "",
+    "text": "Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring\n\n\n\ncausal inference\n\nprogram evaluation\n\nregression discontinuity\n\ndifference-in-differences\n\nedtech\n\n\n\nLinks regression discontinuity and difference-in-differences designs to show how treatment effects at an eligibility cutoff can be generalized to the full population a targeted program is designed to serve.\n\n\n\n\n\n\n\n\n\n\nReliable Measurement of Teachers’ Instructional Practices with LLM Classifiers\n\n\n\nmeasurement\n\npsychometrics\n\ngeneralizability theory\n\nLLMs\n\nAI evaluation\n\n\n\nDevelops a generalizability-theory framework for determining when LLM classifiers produce reliable teacher-level scores — and when they instead reproduce systematic measurement artifacts.\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "chapters/ch2/index.html",
+    "href": "chapters/ch2/index.html",
+    "title": "Reliable Measurement of Teachers’ Instructional Practices with LLM Classifiers",
+    "section": "",
+    "text": "Status: Working paper · Paper, code, and data links coming soon · CRR projection calculator → · Software: mvgstudy →"
+  },
+  {
+    "objectID": "chapters/ch2/index.html#abstract",
+    "href": "chapters/ch2/index.html#abstract",
+    "title": "Reliable Measurement of Teachers’ Instructional Practices with LLM Classifiers",
+    "section": "Abstract",
+    "text": "Abstract\nLarge language models (LLMs) are increasingly used to score teachers’ instructional practices from classroom transcripts. Most validation studies focus on whether LLMs accurately classify individual utterances, but this does not establish whether scores created by aggregating those classifications are reliable across lessons. We extend generalizability theory to LLM-based scoring systems to examine the reliability of teacher-level scores produced by fixed model–prompt configurations. Unlike human raters, a fixed LLM classifier applies the same scoring rule each time it is used. However, classifier performance may vary systematically across teachers, creating errors that persist across their lessons. These systematic errors can appear as differences in teachers’ instructional practice when they are instead artifacts of the classifier. Because these artifacts are reproducible, conventional reliability estimates may treat them as stable between-teacher differences and overstate how much reliable score variation reflects the intended construct. We develop a new reliability coefficient, construct-relevant reliability (CRR), which estimates the proportion of observed teacher-score variance that is both reproducible across lessons and attributable to true differences in instructional practice. CRR can be projected for different numbers and lengths of lessons using a relatively small human-coded validation sample. Monte Carlo simulations examine how classifier performance, systematic scoring differences, and study design jointly affect CRR. We then use CRR to compare 240 model–prompt configurations for measuring open-ended questioning in elementary science classrooms. Across simulations and the empirical application, results show that utterance-level accuracy alone is insufficient for selecting LLM-based scoring systems: configurations with similar classification performance can differ meaningfully in the reliability and validity of the teacher-level scores they produce."
+  },
+  {
+    "objectID": "chapters/ch1/index.html",
+    "href": "chapters/ch1/index.html",
+    "title": "Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring",
+    "section": "",
+    "text": "Status: Working paper · Paper, code, and data links coming soon"
+  },
+  {
+    "objectID": "chapters/ch1/index.html#abstract",
+    "href": "chapters/ch1/index.html#abstract",
+    "title": "Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring",
+    "section": "Abstract",
+    "text": "Abstract\nPrograms that assign services to students scoring below an eligibility threshold are often evaluated using regression discontinuity designs. These estimates are internally valid but apply only to students at the margin of eligibility, who are rarely the students furthest behind—the students such programs are designed to serve. We develop and apply an estimand ladder that carries a causal estimate from the cutoff to the full assigned population using panel data in an evaluation of Targeted Skills Instruction (TSI), a virtual tutoring program integrated with Edmentum’s Exact Path personalized learning platform. Using a two-year panel of Renaissance Star reading and mathematics scores from a large urban district, we estimate four nested intent-to-treat effects of assignment: the level discontinuity at the cutoff using a sharp regression discontinuity; the growth discontinuity using a difference-in-discontinuities design that removes a pre-existing baseline gap; the effect for all assigned students using a two-period inverse probability-weighted difference-in-differences; and its six-period event-study extension. An exact algebraic bridge joins the second and third rungs: when restricted to the RD bandwidth, the weighted difference-in-differences is identical to a sharp RD on the change score, so moving from the cutoff to the full population changes the sample, not the estimator. In reading, the effect generalizes and strengthens beyond the cutoff, from 0.11 standard deviations at the margin to 0.18 under the aligned near-cutoff estimator and 0.25 for the full assigned population, consistent with the program’s targeting of students furthest behind. In mathematics, the ladder is diagnostic rather than confirmatory. The negative level discontinuity at the cutoff predates the intervention, and once that baseline gap is differenced out, the cutoff benchmark is null. The full-population estimates are negative, but they rely on a single identification strategy, attenuate under alternative weighting, and are not corroborated by the null benchmark at the cutoff. We therefore interpret the mathematics evidence as ruling out benefit rather than demonstrating harm."
+  },
+  {
+    "objectID": "chapters/ch2/simulation.html",
+    "href": "chapters/ch2/simulation.html",
+    "title": "Interactive Simulation Explorer",
+    "section": "",
+    "text": "function reliability({J, s2pi, s2piLP, eps2, nL, mupi, saP = 0, sjP = 0, saLP = 0, sjLP = 0}) {\n  const st2  = J * J * s2pi + saP + sjP * (mupi * mupi + s2pi);\n  const sLP2 = saLP + (J * J + sjP) * s2piLP\n             + sjLP * (mupi * mupi + s2pi + s2piLP) + eps2;\n  const rho    = st2 / (st2 + sLP2 / nL);\n  const lambda = (J * J * s2pi) / st2;\n  const crr    = (J * J * s2pi) / (st2 + ((J * J + sjP) * s2piLP + eps2) / nL);\n  return {rho, lambda, crr, st2, sLP2};\n}\n\n// Within-lesson realization error for a hard classifier (draft Eq. for eps-bar^2):\n// A = 1 - sp, J = se + sp - 1, nu1^2 = se(1-se), nu0^2 = sp(1-sp)\nfunction epsHard({se, sp, mupi, n}) {\n  const J = se + sp - 1;\n  const nu1 = se * (1 - se), nu0 = sp * (1 - sp);\n  return (mupi * nu1 + (1 - mupi) * nu0 + mupi * (1 - mupi) * J * J) / n;\n}\n\nC = ({blue: \"#2a78d6\", orange: \"#eb6834\", aqua: \"#1baf7a\", grid: \"#e1e0d9\",\n      ink: \"#0b0b0b\", ink2: \"#52514e\", muted: \"#898781\", wash: \"rgba(227,73,72,0.10)\"})\n\nfmt = d3.format(\".3f\")"
+  },
+  {
+    "objectID": "chapters/ch2/simulation.html#crr-projection-calculator",
+    "href": "chapters/ch2/simulation.html#crr-projection-calculator",
+    "title": "Interactive Simulation Explorer",
+    "section": "CRR projection calculator",
+    "text": "CRR projection calculator\nThis calculator projects the reliability of teacher-level scores produced by a fixed LLM classifier for a planned number and length of lessons. It shows how conventional reliability and construct-relevant reliability (CRR) diverge under differential classifier functioning.\n\nviewof sd_aP  = Inputs.range([0, 0.15], {value: 0, step: 0.005, label: \"Person DCF in intercept σ(a_p)\"})\nviewof sd_jP  = Inputs.range([0, 0.30], {value: 0, step: 0.005, label: \"Person DCF in separation σ(j_p)\"})\nviewof sd_aLP = Inputs.range([0, 0.15], {value: 0, step: 0.005, label: \"Lesson DCF in intercept σ(a_pl)\"})\nviewof sd_jLP = Inputs.range([0, 0.30], {value: 0, step: 0.005, label: \"Lesson DCF in separation σ(j_pl)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nClassifier performance and sampling design\n\n\nviewof se   = Inputs.range([0.5, 0.99], {value: 0.855, step: 0.005, label: \"Sensitivity (se)\"})\nviewof sp   = Inputs.range([0.5, 0.99], {value: 0.743, step: 0.005, label: \"Specificity (sp)\"})\nviewof mupi = Inputs.range([0.02, 0.5], {value: 0.10, step: 0.005, label: \"Mean prevalence μπ\"})\nviewof sdpi   = Inputs.range([0.01, 0.20], {value: 0.048, step: 0.001, label: \"SD of person prevalence σπ\"})\nviewof sdpiLP = Inputs.range([0.01, 0.25], {value: 0.052, step: 0.001, label: \"SD of lesson prevalence σπ,L:P\"})\nviewof nseg = Inputs.range([10, 400], {value: 81, step: 1, label: \"Segments per lesson n\"})\nviewof nLsel = Inputs.range([1, 20], {value: 12, step: 1, label: \"Lessons per person n_L\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncalc = {\n  const J = se + sp - 1;\n  const base = {J, mupi, s2pi: sdpi ** 2, s2piLP: sdpiLP ** 2,\n    eps2: epsHard({se, sp, mupi, n: nseg}),\n    saP: sd_aP ** 2, sjP: sd_jP ** 2, saLP: sd_aLP ** 2, sjLP: sd_jLP ** 2};\n  return {...reliability({...base, nL: nLsel}), base};\n}\n\nhtml`&lt;div style=\"display:flex;gap:12px;flex-wrap:wrap;margin:0.75rem 0;\"&gt;\n  ${[[\"Projected reliability  Eρ²\", calc.rho],\n     [\"Prevalence share  λ\", calc.lambda],\n     [\"Construct-relevant reliability  CRR\", calc.crr]].map(([t, v]) =&gt; html`\n  &lt;div style=\"flex:1;min-width:170px;border:1px solid rgba(11,11,11,0.10);border-radius:8px;padding:12px 16px;background:#fcfcfb;\"&gt;\n    &lt;div style=\"font-size:0.8rem;color:${C.ink2};\"&gt;${t}&lt;/div&gt;\n    &lt;div style=\"font-size:1.9rem;font-weight:600;color:${C.ink};\"&gt;${fmt(v)}&lt;/div&gt;\n  &lt;/div&gt;`)}\n&lt;/div&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n{\n  const rows = d3.range(1, 21).flatMap(nL =&gt; {\n    const r = reliability({...calc.base, nL});\n    return [{nL, y: r.rho, series: \"Eρ² (coefficient)\"},\n            {nL, y: r.crr, series: \"CRR (construct-relevant)\"}];\n  });\n  return Plot.plot({\n    width: 680, height: 340, marginLeft: 45,\n    style: {background: \"transparent\", color: C.ink2},\n    x: {label: \"Lessons per person (n_L)\", ticks: [1, 4, 8, 12, 16, 20]},\n    y: {label: \"Reliability\", domain: [0, 1], grid: true},\n    color: {domain: [\"Eρ² (coefficient)\", \"CRR (construct-relevant)\"],\n            range: [C.blue, C.orange], legend: true},\n    marks: [\n      Plot.ruleY([0], {stroke: \"#c3c2b7\"}),\n      Plot.lineY(rows, {x: \"nL\", y: \"y\", stroke: \"series\", strokeWidth: 2}),\n      Plot.text(rows.filter(d =&gt; d.nL === 20),\n        {x: \"nL\", y: \"y\", text: d =&gt; fmt(d.y), dx: 8, textAnchor: \"start\", fill: C.ink}),\n      Plot.tip(rows, Plot.pointer({x: \"nL\", y: \"y\",\n        title: d =&gt; `${d.series}\\nn_L = ${d.nL}\\n${fmt(d.y)}`}))\n    ]\n  });\n}\n\n\n\n\n\n\n\n\nFigure 1: Projected reliability and CRR as lessons are added, under the settings above. The gap between the two curves is variance the coefficient certifies that is classifier artifact rather than the practice."
+  },
+  {
+    "objectID": "chapters/ch2/simulation.html#what-each-lever-does",
+    "href": "chapters/ch2/simulation.html#what-each-lever-does",
+    "title": "Interactive Simulation Explorer",
+    "section": "What each lever does",
+    "text": "What each lever does\nEach lever above changes one ingredient of the projected reliability of teacher-level scores aggregated from an LLM classifier.\n\nPerson DCF in intercept \\(\\sigma(a_p)\\): how much the classifier’s false-positive rate varies systematically from teacher to teacher, adding reproducible error that looks like a real difference in practice.\nPerson DCF in separation \\(\\sigma(j_p)\\): how much the classifier’s ability to distinguish the practice from everything else varies from teacher to teacher, scaling some teachers’ scores up or down across all their lessons.\nLesson DCF in intercept \\(\\sigma(a_{pl})\\): how much the false-positive rate drifts from lesson to lesson within a teacher, adding error that averages out as more lessons are sampled.\nLesson DCF in separation \\(\\sigma(j_{pl})\\): how much the classifier’s discriminating power drifts from lesson to lesson within a teacher, also averaging out with more lessons.\nSensitivity \\(se\\): the share of true instances of the practice the classifier correctly flags.\nSpecificity \\(sp\\): the share of non-instances the classifier correctly leaves unflagged.\nMean prevalence \\(\\mu_\\pi\\): how often the practice occurs on average across teachers, which sets the base rate the classifier is working against.\nSD of person prevalence \\(\\sigma_\\pi\\): how much teachers truly differ from one another in how often they use the practice, the signal the score is meant to capture.\nSD of lesson prevalence \\(\\sigma_{\\pi,L:P}\\): how much a teacher’s use of the practice varies from lesson to lesson, the occasion noise that more lessons average away.\nSegments per lesson \\(n\\): how many transcript segments the classifier scores in each lesson, which governs the within-lesson realization error.\nLessons per person \\(n_L\\): how many lessons are scored for each teacher, which governs how much lesson-level error is averaged out."
+  },
+  {
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Email: cns8vg@virginia.edu\n\n\nSteffen Erickson is a PhD candidate in the Education Policy program at the University of Virginia. His research centers on developing instruments, building psychometric models, and designing research studies to measure educational constructs and understand intervention effects. His applied work focuses on teacher preparation and evaluation, contributing to research on how teachers develop instructional skills and advancing new approaches for measuring teaching quality and career readiness.\nResearch interests: Measurement & Psychometrics · Causal Inference · Teacher Preparation and Evaluation\n\n\n\nUniversity of Virginia — Charlottesville, VA PhD, Education Policy, Fall 2022 – December 2026 (expected). Advisor: Vivian Wong\nUniversity of Virginia — Charlottesville, VA Master of Public Policy, Fall 2022 – 2024\nUniversity of Virginia — Charlottesville, VA Master of Quantitative Methods, Fall 2021 – Spring 2022\nVirginia Tech — Blacksburg, VA BS in Agricultural Economics, Fall 2015 – Spring 2019\n\n\n\n\nInstitute for Education Sciences (IES) Pre-Doctoral Fellow, 2022 – Present\nRobert Septimus Pace, Jr., Scholarship, 2023\n\n\n\n\n\nCohen, J., Jones, N., Wong, V. C., Quinn, A., Erickson, S., Parten, H., & Suhr, M. (in press). Practice-based, online modules for expediting teacher skill development. Educational Evaluation and Policy Analysis. EdWorkingPaper No. 26-1460\nCohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. Educational Researcher, 53(1), 19–35.\nSuhr, M., Erickson, S., Kelcey, B., Mclean, L., Cohen, J., & Jones, N. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Educational Assessment.\nWilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates’ perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. AERA Open, 11, 23328584251375064.\n\n\n\n\n\nErickson, S., Wong, V. C., & Dray, A. (in preparation). Generalizing beyond the regression discontinuity cutoff using panel data: An evaluation of hybrid tutoring. Target journal: Educational Evaluation and Policy Analysis.\nErickson, S. (in preparation). Reliable measurement of teachers’ instructional practices with LLM classifiers. Target journal: Journal of Educational and Behavioral Statistics.\nErickson, S. (in preparation). Hierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education. Target journal: American Educational Research Journal.\nErickson, S. (in preparation). mvgstudy: Stata commands for analyzing multivariate generalizability and decision studies. Target journal: Stata Journal.\nTherrien, B., Doabler, C., & Erickson, S. (in preparation). Practice opportunities and the pursuit of scientific literacy for students with learning disabilities.\n\n\n\n\n\nThe effects of combining personalized learning technology and virtual tutoring on student achievement outcomes. Paper presentation, EdPolicyWorks Policy Lab, November 2025\nHierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education. Paper presentation, EdPolicyWorks Policy Lab, April 2025\nExploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Paper presentation, AEFP, March 2025\nAssessing causality within structural equation models with latent variables. Paper presentation, SREE, September 2024\nModel validation in the presence of multifaceted error. Paper presentation, International Meeting of the Psychometric Society, July 2024\nCausal models for skill development. Paper presentation, EdPolicyWorks Policy Lab, March 2024\nExploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Poster presentation, PCRC, February 2024\nEvaluation of simulated learning in teacher preparation across universities. Paper presentation, APPAM, November 2023\nData systems for randomized control trials. Tutorial, TeachSim Group, September 2023\n\n\n\n\nEducation Policy UVA 4080 — Teaching Assistant, Fall 2025\n\n\n\nEdmentum — Remote Graduate Student Intern, Efficacy Research, June 2025 – August 2025\nNWEA — Remote Graduate Student Intern, Growth Modeling and Data Analytics, June 2022 – September 2022\nTeach For America — San Antonio, TX Corps Member, June 2019 – August 2021\n\n\n\n\nProgramming: Stata and Mata (developer); R, Python, LaTeX (advanced)\nResearch design · Statistical modeling · Instrument development and validation\nData visualization · Technical writing · Natural language processing"
+  },
+  {
+    "objectID": "cv.html#profile",
+    "href": "cv.html#profile",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Steffen Erickson is a PhD candidate in the Education Policy program at the University of Virginia. His research centers on developing instruments, building psychometric models, and designing research studies to measure educational constructs and understand intervention effects. His applied work focuses on teacher preparation and evaluation, contributing to research on how teachers develop instructional skills and advancing new approaches for measuring teaching quality and career readiness.\nResearch interests: Measurement & Psychometrics · Causal Inference · Teacher Preparation and Evaluation"
+  },
+  {
+    "objectID": "cv.html#education",
+    "href": "cv.html#education",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "University of Virginia — Charlottesville, VA PhD, Education Policy, Fall 2022 – December 2026 (expected). Advisor: Vivian Wong\nUniversity of Virginia — Charlottesville, VA Master of Public Policy, Fall 2022 – 2024\nUniversity of Virginia — Charlottesville, VA Master of Quantitative Methods, Fall 2021 – Spring 2022\nVirginia Tech — Blacksburg, VA BS in Agricultural Economics, Fall 2015 – Spring 2019"
+  },
+  {
+    "objectID": "cv.html#fellowships-scholarships",
+    "href": "cv.html#fellowships-scholarships",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Institute for Education Sciences (IES) Pre-Doctoral Fellow, 2022 – Present\nRobert Septimus Pace, Jr., Scholarship, 2023"
+  },
+  {
+    "objectID": "cv.html#published-papers",
+    "href": "cv.html#published-papers",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Cohen, J., Jones, N., Wong, V. C., Quinn, A., Erickson, S., Parten, H., & Suhr, M. (in press). Practice-based, online modules for expediting teacher skill development. Educational Evaluation and Policy Analysis. EdWorkingPaper No. 26-1460\nCohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. Educational Researcher, 53(1), 19–35.\nSuhr, M., Erickson, S., Kelcey, B., Mclean, L., Cohen, J., & Jones, N. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Educational Assessment.\nWilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates’ perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. AERA Open, 11, 23328584251375064."
+  },
+  {
+    "objectID": "cv.html#work-in-progress",
+    "href": "cv.html#work-in-progress",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Erickson, S., Wong, V. C., & Dray, A. (in preparation). Generalizing beyond the regression discontinuity cutoff using panel data: An evaluation of hybrid tutoring. Target journal: Educational Evaluation and Policy Analysis.\nErickson, S. (in preparation). Reliable measurement of teachers’ instructional practices with LLM classifiers. Target journal: Journal of Educational and Behavioral Statistics.\nErickson, S. (in preparation). Hierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education. Target journal: American Educational Research Journal.\nErickson, S. (in preparation). mvgstudy: Stata commands for analyzing multivariate generalizability and decision studies. Target journal: Stata Journal.\nTherrien, B., Doabler, C., & Erickson, S. (in preparation). Practice opportunities and the pursuit of scientific literacy for students with learning disabilities."
+  },
+  {
+    "objectID": "cv.html#scholarly-presentations",
+    "href": "cv.html#scholarly-presentations",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "The effects of combining personalized learning technology and virtual tutoring on student achievement outcomes. Paper presentation, EdPolicyWorks Policy Lab, November 2025\nHierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education. Paper presentation, EdPolicyWorks Policy Lab, April 2025\nExploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Paper presentation, AEFP, March 2025\nAssessing causality within structural equation models with latent variables. Paper presentation, SREE, September 2024\nModel validation in the presence of multifaceted error. Paper presentation, International Meeting of the Psychometric Society, July 2024\nCausal models for skill development. Paper presentation, EdPolicyWorks Policy Lab, March 2024\nExploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. Poster presentation, PCRC, February 2024\nEvaluation of simulated learning in teacher preparation across universities. Paper presentation, APPAM, November 2023\nData systems for randomized control trials. Tutorial, TeachSim Group, September 2023"
+  },
+  {
+    "objectID": "cv.html#teaching",
+    "href": "cv.html#teaching",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Education Policy UVA 4080 — Teaching Assistant, Fall 2025"
+  },
+  {
+    "objectID": "cv.html#professional-experience",
+    "href": "cv.html#professional-experience",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Edmentum — Remote Graduate Student Intern, Efficacy Research, June 2025 – August 2025\nNWEA — Remote Graduate Student Intern, Growth Modeling and Data Analytics, June 2022 – September 2022\nTeach For America — San Antonio, TX Corps Member, June 2019 – August 2021"
+  },
+  {
+    "objectID": "cv.html#skills",
+    "href": "cv.html#skills",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Programming: Stata and Mata (developer); R, Python, LaTeX (advanced)\nResearch design · Statistical modeling · Instrument development and validation\nData visualization · Technical writing · Natural language processing"
+  },
+  {
+    "objectID": "skills/index.html",
+    "href": "skills/index.html",
+    "title": "Claude Skills",
+    "section": "",
+    "text": "Skills I have written for Claude Code. A skill is a folder with a SKILL.md file that Claude loads when a task matches its description, so the same conventions get applied every time instead of being re-explained in each conversation.\nTo install one, put its folder in ~/.claude/skills/ (available in every project) or .claude/skills/ inside a project.\n\n\n\n\n\n\n\n\n\n\n\nstata-data-management\n\n\n\nClaude Code\n\nStata\n\n\n\nClaude Code skill for writing and reviewing Stata .do files that import, clean, merge, reshape, and assemble analytic datasets.\n\n\n\n\n\n\n\n\n\nstata-mata-programmer\n\n\n\nClaude Code\n\nStata\n\nMata\n\n\n\nClaude Code skill for writing and reviewing Stata .ado programs, the Mata code inside them, and the .sthlp help files that ship with them.\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "skills/stata-mata-programmer/index.html",
+    "href": "skills/stata-mata-programmer/index.html",
+    "title": "stata-mata-programmer",
+    "section": "",
+    "text": "Skill file · SKILL.md"
+  },
+  {
+    "objectID": "skills/stata-mata-programmer/index.html#what-it-does",
+    "href": "skills/stata-mata-programmer/index.html#what-it-does",
+    "title": "stata-mata-programmer",
+    "section": "What it does",
+    "text": "What it does\nThis skill teaches Claude how I write Stata packages: an .ado wrapper that parses, validates, displays results, and returns them; a Mata engine underneath it; and a help file that matches the command’s syntax line for line. Without it, Claude writes Stata that runs but does not look like a package — no syntax validation, no stored results, no help file, and Mata code that breaks in batch mode.\nIt loads automatically when a request involves .ado, .mata, or .sthlp files, or a .do file containing mata blocks. Data cleaning and dataset assembly are covered by the companion skill, stata-data-management."
+  },
+  {
+    "objectID": "skills/stata-mata-programmer/index.html#installation",
+    "href": "skills/stata-mata-programmer/index.html#installation",
+    "title": "stata-mata-programmer",
+    "section": "Installation",
+    "text": "Installation\nSave SKILL.md to ~/.claude/skills/stata-mata-programmer/SKILL.md. Claude Code picks it up on the next session."
+  },
+  {
+    "objectID": "skills/stata-mata-programmer/index.html#what-is-in-it",
+    "href": "skills/stata-mata-programmer/index.html#what-is-in-it",
+    "title": "stata-mata-programmer",
+    "section": "What is in it",
+    "text": "What is in it\n\nA required first pass\nBefore writing code, Claude has to answer six questions out loud: is this a new command, a new option, or a class extension; what crosses the Stata–Mata boundary and in which direction; does the command depend on state left behind by another command; what does the caller get back in r() or e(); is memoization needed; and which files change. The last one matters most — a new option touches the .ado, the Mata method, and the help file, and the skill requires all three or an explicit statement of what was skipped.\n\n\nPackage layout\nOne user command per .ado file, always. Stata autoloads a program only by the name of the command called, and it silently drops autoloaded programs under memory pressure, so a second command hiding in the first command’s file works until a long bootstrap makes it vanish. The Mata class and free functions are compiled into an .mlib by a build do-file rather than shipped as inline source. The skill also fixes the housekeeping around this: a two-line *! banner in every file that names only the current version and date, with the full release history kept once in a CHANGELOG.md rather than repeated at the top of each file, a .pkg version floor that matches the version statement and the Stata that compiled the library, and a grep for undeclared mm_* calls so a stray moremata dependency does not break the package for everyone else.\n\n\nStata conventions\nProgram anatomy for the wrapper, and rules for the Stata–Mata boundary: every st_local(), st_matrix(), st_numscalar(), and st_data() call, tempnames passed into Mata instead of hard-coded global names, labeled returned matrices, and save-and-restore patterns for operations that mutate a persistent Mata object.\n\n\nMata conventions\nClass organization with an explicit public/private split, shared computation cores so variants do not drift apart, explicit type declarations, error handling, asarray memoization, whole-token string matching, matrix algebra and replicate bookkeeping, and a list of constructs that run interactively but fail under batch mode (stata -b do), which is how test suites and scripted installs actually execute the code.\n\n\nHelp files\nA .sthlp skeleton in SMCL plus the rules that keep it honest: the syntax line, the option table, the option descriptions, and the stored results all have to agree with the .ado that ships beside them.\n\n\nTesting\nEleven steps for testing an estimation or computation command, from an interactive smoke test to a post-publish check. The core is numerical: a validation do-file where every test compares the command’s output to a closed-form or hand-computed target with a stated tolerance, plus internal-consistency checks that recompute the headline statistic from the stored results and confirm the display path and the return path agree. Refactors are held to byte-identical output against a snapshot of the previous release.\n\n\nPitfall index\nA table of the mistakes the rest of the document exists to prevent, each paired with its fix and the section that explains it."
+  },
+  {
+    "objectID": "software/index.html",
+    "href": "software/index.html",
+    "title": "Software",
+    "section": "",
+    "text": "Stata packages developed for my research. All are open source; issues and pull requests welcome.\nThe code is maintained using Claude Code with my stata-mata-programmer skill.\n\n\n\n\n\n\n\n\n\n\n\nimporttextfiles\n\n\n\nStata\n\ndata management\n\ntext\n\n\n\nStata command that reads every text file in a directory into the dataset, one observation per file, storing file name and complete contents in strL variables with line…\n\n\n\n\n\n\n\n\n\nmvgstudy\n\n\n\nStata\n\npsychometrics\n\ngeneralizability theory\n\n\n\nStata commands for multivariate generalizability and decision studies: variance/covariance component estimation with bootstrap BCa inference, D-study projections, and…\n\n\n\n\n\nNo matching items"
+  }
+]
