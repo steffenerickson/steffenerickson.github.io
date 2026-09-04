@@ -8,12 +8,6 @@ format:
 
 **Email:** cns8vg@virginia.edu
 
-## Profile
-
-Steffen Erickson is a PhD candidate in the Education Policy program at the University of Virginia. His research centers on developing instruments, building psychometric models, and designing research studies to measure educational constructs and understand intervention effects. His applied work focuses on teacher preparation and evaluation, contributing to research on how teachers develop instructional skills and advancing new approaches for measuring teaching quality and career readiness.
-
-**Research interests:** Measurement & Psychometrics · Causal Inference · Teacher Preparation and Evaluation
-
 ## Education
 
 **University of Virginia** — Charlottesville, VA
