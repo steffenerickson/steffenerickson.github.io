@@ -17,7 +17,7 @@ about:
       href: mailto:cns8vg@virginia.edu
 ---
 
-I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. My dissertation focuses on new technologies in schools, asking two questions: **do they actually help students**, and **can we trust the data we use to decide?**
+I am a PhD candidate in Education Policy at the University of Virginia and an Institute of Education Sciences (IES) pre-doctoral fellow. My research examines how new technologies are changing education, with a focus on two fundamental questions: **Do they actually improve student learning**, and **can we trust the measures we use to evaluate them?**
 
 ## Working Papers
 

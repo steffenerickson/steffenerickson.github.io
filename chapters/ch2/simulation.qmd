@@ -131,5 +131,3 @@ Each lever above changes one ingredient of the projected reliability of teacher-
 - **Lessons per person** $n_L$: how many lessons are scored for each teacher, which governs how much lesson-level error is averaged out.
 
 ---
-
-*Formulas: chapter draft, closed-form expressions for $E\rho^2$, $\lambda$, and CRR, verified against the stored closed-form values in every simulated cell.*

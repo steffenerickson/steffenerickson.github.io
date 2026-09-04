@@ -1,5 +1,5 @@
 ---
-title: "Chapter 2: Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers"
+title: "Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers"
 description: "A generalizability-theory framework for scores produced by large language model classifiers — reliability coefficients and selection criteria for count-based measurement systems."
 order: 2
 categories: [measurement, psychometrics, generalizability theory, LLMs, AI evaluation]
