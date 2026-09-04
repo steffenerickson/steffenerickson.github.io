@@ -1,0 +1,56 @@
+---
+title: "stata-data-management"
+description: "Claude Code skill for writing and reviewing Stata .do files that import, clean, merge, reshape, and assemble analytic datasets."
+categories: [Claude Code, Stata]
+---
+
+::: {.callout-note appearance="simple" icon=false}
+**Skill file** · [SKILL.md](SKILL.md)
+:::
+
+## What it does
+
+This skill teaches Claude how I write the do-files that sit between raw files and the first estimation command: import, harmonize, merge, deduplicate, reshape, and save. The goal is a cleaning file that runs from a clean session on any machine, checks its own assumptions with `assert` rather than leaving them to be eyeballed, and lets a reader trace every variable in the output back to its source and rule. Without it, Claude writes cleaning code that works on the file in front of it but drops rows silently, encodes categories alphabetically, and leaves diagnostic `tab` calls scattered through shipped code.
+
+It loads automatically when a request involves cleaning a CSV, building an analytic file, merging or reshaping datasets, or reviewing a data-prep do-file. Programs, Mata, and help files are covered by the companion skill, [stata-mata-programmer](../stata-mata-programmer/).
+
+## Installation
+
+Save [SKILL.md](SKILL.md) to `~/.claude/skills/stata-data-management/SKILL.md`. Claude Code picks it up on the next session.
+
+## What is in it
+
+### A required first pass
+
+Before writing code, Claude has to answer five questions: is this a new project, a new do-file, or an edit to an existing one; what is the unit of observation of every input and of the output; which rows are allowed to disappear and why; what must be true of the output; and which files change. The answers become the file's key checks, its comments, and its end-of-file contract.
+
+### Project structure, applied only when asked
+
+A numbered folder layout with a single config file for paths, a run-all file, and a separate file for value labels. The skill imposes this only for a project started from scratch or on request. When editing an existing file, Claude works inside the current layout and, if the project would clearly benefit from the structure, says so once in a sentence at the end.
+
+The separate labels file exists for a specific reason. Loading data with `use`, `import`, `clear`, or `restore` discards the value labels in memory, so a label defined at the top of a do-file is gone by the time `encode` runs, and `encode` silently falls back to alphabetical codes. The skill requires the labels file to be run again immediately before any `encode`.
+
+### Cleaning conventions
+
+One section each for the anatomy of a cleaning do-file, importing, frames and append, keys and duplicates, merges, strings and dates, indicators and encoding, reshape, and derived variables. The rules that recur throughout:
+
+- Import every column as a string and destring deliberately, so types agree across files before they are appended.
+- Declare a key for every dataset and check it with `isid` at every stage boundary.
+- Choose among duplicate rows with an explicit, ordered, commented `bysort` rule, never with `egen tag`.
+- Every merge names its flag, states in a comment what match pattern it expects, and asserts it.
+- After merging a participation file, missing means absent from that file, not zero.
+- Build indicators against a known value set with `inlist()` and leave everything else missing.
+- Pin `encode` codes with a predefined label so the same category gets the same code in every file.
+- Attach labels at the line that creates the variable, not in a block at the end.
+
+### The output contract
+
+Every cleaning file ends with the same block before `save`: an `isid` on the declared key, range asserts on the important variables, a row count, `compress`, a dataset label and characteristics recording which do-file built it, and a `datasignature` so downstream files can confirm their input has not changed.
+
+### Review checklist
+
+For "review my cleaning code" requests, findings are reported in order of consequence: silent data loss first, then fragile codings, unchecked keys, repetition, reproducibility, and hygiene. When the request is a rewrite, the old output file is the test oracle. Claude merges the new output against the old on the declared key and reports rows only in the old file, rows only in the new one, and rows where values differ, each with a cause.
+
+### Pitfall index
+
+A table of the mistakes the rest of the document exists to prevent, each paired with its fix and the section that explains it.

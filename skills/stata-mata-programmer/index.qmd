@@ -12,7 +12,7 @@ categories: [Claude Code, Stata, Mata]
 
 This skill teaches Claude how I write Stata packages: an `.ado` wrapper that parses, validates, displays results, and returns them; a Mata engine underneath it; and a help file that matches the command's syntax line for line. Without it, Claude writes Stata that runs but does not look like a package — no `syntax` validation, no stored results, no help file, and Mata code that breaks in batch mode.
 
-It loads automatically when a request involves `.ado`, `.mata`, or `.sthlp` files, or a `.do` file containing `mata` blocks. Data cleaning and dataset assembly are covered by a separate skill.
+It loads automatically when a request involves `.ado`, `.mata`, or `.sthlp` files, or a `.do` file containing `mata` blocks. Data cleaning and dataset assembly are covered by the companion skill, [stata-data-management](../stata-data-management/).
 
 ## Installation
 

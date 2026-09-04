@@ -14,9 +14,7 @@ version: "1.0.0"
 
 ## What it does
 
-`importtextfiles` reads every file in a directory matching a file pattern, sorted by name, and stores each file as one observation with two `strL` variables: the file name and the complete file contents. Contents are written directly from Mata, so no intermediate file is created and embedded quotes, newlines, and arbitrary bytes are preserved exactly.
-
-It is built for corpora of documents — transcripts, notes, model outputs — that need to sit alongside structured data in Stata. Because `strL` variables hold real newline characters, no placeholder such as a literal `\n` is needed: exporting with `export delimited` or reading the `.dta` with `pandas.read_stata` yields the text with proper line breaks.
+`importtextfiles` reads every file in a directory matching a file pattern, sorted by name, and stores each file as one observation with two `strL` variables: the file name and the complete file contents. It is built for corpora of documents — transcripts, notes, model outputs — that need to sit alongside structured data in Stata.
 
 ## Installation
 
@@ -42,24 +40,6 @@ Load a second corpus into its own frame without touching the current data, or re
 importtextfiles using "raw/2024-25 Transcripts", frame(t2) normalize
 importtextfiles using "notes", pattern(*.md) separator(" ") clear
 ```
-
-## Main features
-
-### Exact contents, no temporary files
-
-Each file is read and written to the dataset from Mata, so quotes, embedded newlines, and arbitrary bytes arrive unchanged. Without options, bytes are stored exactly as found on disk.
-
-### Line-ending control
-
-The `normalize` option converts Windows (CRLF) and old-Mac (CR) line endings to LF and strips trailing newlines — recommended when the data will be read by Python or R. The `separator()` option goes further and joins lines with any string (for example a single space) to produce single-line cells.
-
-### Frames and safe overwriting
-
-With `frame()`, the dataset is created in a new frame and the current frame and its data are left untouched. The `clear` option is required only when data in memory (or an existing frame of the same name) would be discarded; otherwise the command exits with an error rather than overwriting.
-
-### Stored results
-
-The command returns the number of files read in `r(N)`, along with the directory, pattern, frame, and variable names used, so downstream code can check and log what was imported.
 
 ## Syntax reference
 
