@@ -4,13 +4,13 @@ description: "Develops a generalizability-theory framework for determining when 
 order: 2
 categories: [measurement, psychometrics, generalizability theory, LLMs, AI evaluation]
 status: "Working paper"
-# paper-url: ../../files/ch2.pdf
+paper-url: erickson_2026_reliable_llm_measurement.pdf
 # code-url: https://github.com/steffenerickson/ch2-repo
 # data-url: https://doi.org/10.5281/zenodo.XXXXXXX
 ---
 
 ::: {.callout-note appearance="simple" icon=false}
-**Status:** {{< meta status >}} · Paper, code, and data links coming soon · [**CRR projection calculator →**](simulation.qmd) · [**Software: mvgstudy →**](../../software/mvgstudy/index.qmd)
+**Status:** {{< meta status >}} · [**Paper (PDF) →**](erickson_2026_reliable_llm_measurement.pdf) · Code and data links coming soon · [**CRR projection calculator →**](simulation.qmd) · [**Software: mvgstudy →**](../../software/mvgstudy/index.qmd)
 :::
 
 ## Abstract

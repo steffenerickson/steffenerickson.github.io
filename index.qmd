@@ -25,7 +25,7 @@ I am a PhD candidate in Education Policy at the University of Virginia and an In
 ## Working Papers
 
 - [Generalizing Beyond the Regression Discontinuity Cutoff Using Panel Data: An Evaluation of Hybrid Tutoring](chapters/ch1/index.qmd)
-- [Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers](chapters/ch2/index.qmd)
+- [Reliable Measurement of Teachers' Instructional Practices with LLM Classifiers](chapters/ch2/index.qmd) · [PDF](chapters/ch2/erickson_2026_reliable_llm_measurement.pdf)
 
 ## Published Work
 
