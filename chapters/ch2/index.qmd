@@ -10,8 +10,12 @@ paper-url: erickson_2026_reliable_llm_measurement.pdf
 ---
 
 ::: {.callout-note appearance="simple" icon=false}
-**Status:** {{< meta status >}} · [**Paper (PDF) →**](erickson_2026_reliable_llm_measurement.pdf) · Code and data links coming soon · [**CRR projection calculator →**](simulation.qmd) · [**Software: mvgstudy →**](../../software/mvgstudy/index.qmd)
+**Status:** {{< meta status >}} · Code and data links coming soon
 :::
+
+- [**Paper (PDF) →**](erickson_2026_reliable_llm_measurement.pdf)
+- [**CRR projection calculator →**](simulation.qmd)
+- [**Software: mvgstudy →**](../../software/mvgstudy/index.qmd)
 
 ## Abstract
 
