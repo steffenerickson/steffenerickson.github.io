@@ -14,6 +14,7 @@ paper-url: erickson_2026_reliable_llm_measurement.pdf
 :::
 
 - [**Paper (PDF) →**](erickson_2026_reliable_llm_measurement.pdf)
+- [**SREE 2026 conference slides →**](erickson_sree_slides_2026.pdf)
 - [**CRR projection calculator →**](simulation.qmd)
 - [**Software: mvgstudy →**](../../software/mvgstudy/index.qmd)
 

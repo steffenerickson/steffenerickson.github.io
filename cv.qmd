@@ -29,10 +29,10 @@ BS in Agricultural Economics, Fall 2015 – Spring 2019
 
 ## Published Papers
 
-- Cohen, J., Jones, N., Wong, V. C., Quinn, A., Erickson, S., Parten, H., & Suhr, M. (in press). Practice-based, online modules for expediting teacher skill development. *Educational Evaluation and Policy Analysis*. [EdWorkingPaper No. 26-1460](https://doi.org/10.26300/vp80-mq53)
-- Cohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. *Educational Researcher, 53*(1), 19–35.
-- Suhr, M., Erickson, S., Kelcey, B., Mclean, L., Cohen, J., & Jones, N. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. *Educational Assessment*.
-- Wilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates' perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. *AERA Open, 11*, 23328584251375064.
+- Cohen, J., Jones, N., Wong, V. C., Quinn, A. M., Erickson, S., Parten, H., & Suhr, M. P. (2026). Practice-based, online modules for expediting teacher skill development. *Educational Evaluation and Policy Analysis*. Advance online publication. [https://doi.org/10.3102/01623737261477116](https://doi.org/10.3102/01623737261477116)
+- Cohen, J., Wong, V. C., Krishnamachari, A., & Erickson, S. (2024). Experimental evidence on the robustness of coaching supports in teacher education. *Educational Researcher, 53*(1), 19–35. [https://doi.org/10.3102/0013189X231198827](https://doi.org/10.3102/0013189X231198827)
+- Pilger Suhr, M., Erickson, S., Kelcey, B., Jones, N., Cohen, J., & McLean, L. (2026). Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs. *Educational Assessment*. Advance online publication. [https://doi.org/10.1080/10627197.2026.2666090](https://doi.org/10.1080/10627197.2026.2666090)
+- Wilson, K., Cohen, J., & Erickson, S. (2025). Teacher candidates' perceptions of mixed reality simulations: Variations by task, support, and mode of delivery. *AERA Open, 11*, 23328584251375064. [https://doi.org/10.1177/23328584251375064](https://doi.org/10.1177/23328584251375064)
 
 ## Work In Progress
 
@@ -44,6 +44,7 @@ BS in Agricultural Economics, Fall 2015 – Spring 2019
 
 ## Scholarly Presentations
 
+- *Reliable measurement of teachers’ instructional practices with LLM classifiers.* Paper presentation, SREE, September 2026
 - *The effects of combining personalized learning technology and virtual tutoring on student achievement outcomes.* Paper presentation, EdPolicyWorks Policy Lab, November 2025
 - *Hierarchical patterns of influence among teaching skills in network psychometric models: Implications for learning sequences in teacher education.* Paper presentation, EdPolicyWorks Policy Lab, April 2025
 - *Exploring the use of performance tasks as formative assessments of pre-service teacher instructional skills within teacher preparation programs.* Paper presentation, AEFP, March 2025
