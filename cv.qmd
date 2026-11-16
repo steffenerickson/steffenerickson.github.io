@@ -11,7 +11,7 @@ format:
 ## Education
 
 **University of Virginia** — Charlottesville, VA
-PhD, Education Policy, Fall 2022 – December 2026 (expected). Advisor: Vivian Wong
+PhD, Education Policy, Fall 2022 – January 2027 (expected). Advisor: Vivian Wong
 
 **University of Virginia** — Charlottesville, VA
 Master of Public Policy, Fall 2022 – 2024
@@ -61,11 +61,29 @@ BS in Agricultural Economics, Fall 2015 – Spring 2019
 
 ## Professional Experience
 
+**Eticas**
+Psychometric Consultant, November 2026 – Present
+
+- Provide psychometric consulting for a project using frontier large language models (LLMs) to assess written reasoning in student essays.
+- Advise on rubric development, human rater training and calibration, and psychometric analyses to evaluate the reliability and validity of human- and LLM-generated scores.
+- Develop and maintain datasets and analytical code for scoring and psychometric analyses.
+
+**Edmentum**
+Independent Evaluation Consultant, August 2025 – Present
+
+- Conduct an independent evaluation of Edmentum’s Targeted Skills Instruction (TSI) hybrid tutoring program, applying quasi-experimental methods to estimate the causal effect of program eligibility on student academic achievement.
+
 **Edmentum** — Remote
 Graduate Student Intern, Efficacy Research, June 2025 – August 2025
 
+- Applied quasi-experimental methods to evaluate the effects of educational technology products and interventions on student academic achievement.
+- Used R to manage, clean, and analyze large, complex datasets containing student assessment, demographic, and educational technology usage data.
+
 **NWEA** — Remote
 Graduate Student Intern, Growth Modeling and Data Analytics, June 2022 – September 2022
+
+- Conducted psychometric analyses of large-scale assessments and applied statistical models to examine student achievement growth in mathematics and reading.
+- Used R to manage and analyze large, complex longitudinal assessment datasets and implement statistical models of student achievement growth.
 
 **Teach For America** — San Antonio, TX
 Corps Member, June 2019 – August 2021
